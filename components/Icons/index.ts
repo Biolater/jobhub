@@ -1,3 +1,3 @@
 import AddIcon from "./AddIcon";
-
-export { AddIcon }
+import NoJobIcon from "./NoJobIcon";
+export { AddIcon, NoJobIcon };
