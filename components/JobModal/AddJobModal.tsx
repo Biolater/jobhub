@@ -27,7 +27,7 @@ const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
     >
       <div
         ref={jobModalRef}
-        className="addJobModal__inner max-h-[90vh] overflow-auto bg-primary rounded-lg p-6"
+        className="addJobModal__inner max-h-[90svh] overflow-auto bg-primary rounded-lg p-6"
       >
         <p className="text-2xl font-semibold bg-gradient-to-r from-accent to-light text-center mb-2 text-transparent bg-clip-text">
           Add a job you have applied
