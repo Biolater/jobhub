@@ -3,14 +3,20 @@ import { FC, useState } from "react";
 import { AddIcon } from "../Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { AddJobModalPortal } from "@/components";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "aws-amplify/auth";
 const Navbar: FC = () => {
   const [jobModalActive, setJobModalActive] = useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
   const handleJobModal = () => {
     setJobModalActive(true);
   };
   const handleJobModalCancel = () => {
     setJobModalActive(false);
   };
+  const handleSignOut = async () => {
+    await signOut();
+  }
   return (
     <header>
       <nav className="navbar">
@@ -45,6 +51,7 @@ const Navbar: FC = () => {
                 </div>
               </button>
             </Tooltip>
+            {isLoggedIn && <button onClick={handleSignOut} className="navbar__logoutBtn">Logout</button>}
           </div>
         </div>
       </nav>

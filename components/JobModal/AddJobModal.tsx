@@ -1,11 +1,11 @@
 "use client";
 import { AddJobForm } from "@/components";
-import { FC, useRef, MouseEventHandler } from "react";
+import { FC, useRef, MouseEventHandler, RefObject } from "react";
 const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
   isActive,
   handleCancel,
 }) => {
-  const jobModalRef = useRef<HTMLDivElement>(null);
+  const jobModalRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const handleClickOutside: MouseEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
     if (
