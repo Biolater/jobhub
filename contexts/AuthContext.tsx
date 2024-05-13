@@ -3,6 +3,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import { getCurrentUser } from "aws-amplify/auth";
+import { Hub } from "aws-amplify/utils";
+import { useRouter } from "next/navigation";
 Amplify.configure(outputs);
 
 const AuthContext = createContext({
@@ -15,7 +17,22 @@ export default function AuthContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  Hub.listen("auth", ({ payload }) => {
+    switch (payload.event) {
+      case "signedIn":
+        setIsLoggedIn(true);
+        router.push("/jobs");
+        break;
+      case "signedOut":
+        setIsLoggedIn(false);
+        router.push("/");
+        break;
+      default:
+        break;
+    }
+  });
   useEffect(() => {
     const checkAuth = async () => {
       try {

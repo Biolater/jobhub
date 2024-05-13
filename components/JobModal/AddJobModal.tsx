@@ -1,6 +1,6 @@
 "use client";
 import { AddJobForm } from "@/components";
-import { FC, useRef, MouseEventHandler, RefObject } from "react";
+import { FC, useRef, MouseEventHandler, RefObject, useEffect } from "react";
 const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
   isActive,
   handleCancel,
@@ -15,7 +15,19 @@ const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
       handleCancel();
     }
   };
-
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        handleCancel();
+      }
+    });
+    return () =>
+      document.removeEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          handleCancel();
+        }
+      });
+  }, []);
   return (
     <div
       onClick={handleClickOutside}
