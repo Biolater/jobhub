@@ -9,6 +9,8 @@ Amplify.configure(outputs);
 
 const AuthContext = createContext({
   isLoggedIn: false,
+  email: "",
+  setUserEmail: (email: string) => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -19,6 +21,7 @@ export default function AuthContextProvider({
 }) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setUserEmail] = useState<string>("");
   Hub.listen("auth", ({ payload }) => {
     switch (payload.event) {
       case "signedIn":
@@ -47,7 +50,7 @@ export default function AuthContextProvider({
     checkAuth();
   }, []);
   return (
-    <AuthContext.Provider value={{ isLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, email, setUserEmail }}>
       {children}
     </AuthContext.Provider>
   );
