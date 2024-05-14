@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 Amplify.configure(outputs);
 const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
   const client = generateClient<Schema>();
+  const { userId } = useAuth();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -16,7 +17,6 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     const description = formData.get("description") as string;
     const date = formData.get("date") as string;
     const note = formData.get("note") as string;
-    const { userId } = useAuth();
     try {
       client.models.Job.create({
         userId,
