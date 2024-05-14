@@ -8,7 +8,7 @@ import outputs from "../../amplify_outputs.json";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 const Signup = () => {
-  const { setUserEmail } = useAuth();
+  const { setUserEmail, setUserId } = useAuth();
   Amplify.configure(outputs);
   const client = generateClient<Schema>();
   const router = useRouter();
@@ -18,7 +18,7 @@ const Signup = () => {
 
   const handleSignUp = async (username: string, password: string) => {
     try {
-      await signUp({
+      const userFromAws = await signUp({
         username,
         password,
         options: {
@@ -28,7 +28,8 @@ const Signup = () => {
           autoSignIn: false,
         },
       });
-      const { errors } = await client.models.User.create({
+      const { errors, data: newUser } = await client.models.User.create({
+        id: userFromAws?.userId,
         email: email,
         username: name,
         password: password,
@@ -37,7 +38,10 @@ const Signup = () => {
         throw new Error(errors[0].message);
       } else {
         setUserEmail(email);
+        setUserId(newUser?.id as string);
         router.push("/confirm-password");
+        console.log(newUser);
+        console.log(userFromAws);
       }
     } catch (error) {
       console.log(error);

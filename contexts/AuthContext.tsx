@@ -12,6 +12,7 @@ const AuthContext = createContext({
   email: "",
   setUserEmail: (email: string) => {},
   userId: "",
+  setUserId: (id: string) => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -42,9 +43,11 @@ export default function AuthContextProvider({
     const checkAuth = async () => {
       try {
         const user = await getCurrentUser();
+        
         if (user) {
           setIsLoggedIn(true);
           setUserId(user.userId);
+          console.log(user);
         }
       } catch (err) {
         setIsLoggedIn(false);
@@ -53,7 +56,7 @@ export default function AuthContextProvider({
     checkAuth();
   }, []);
   return (
-    <AuthContext.Provider value={{ isLoggedIn, email, setUserEmail, userId }}>
+    <AuthContext.Provider value={{ isLoggedIn, email, setUserEmail, userId, setUserId }}>
       {children}
     </AuthContext.Provider>
   );

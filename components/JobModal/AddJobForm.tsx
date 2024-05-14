@@ -18,7 +18,7 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     const date = formData.get("date") as string;
     const note = formData.get("note") as string;
     try {
-      client.models.Job.create({
+      const data = await client.models.Job.create({
         userId,
         title: jobTitle,
         joburl: jobUrl,
@@ -27,6 +27,7 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
         date,
         notes: note,
       });
+      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {
