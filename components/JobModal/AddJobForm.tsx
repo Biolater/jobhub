@@ -3,6 +3,7 @@ import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../../amplify/data/resource";
 import outputs from "../../amplify_outputs.json";
 import { Amplify } from "aws-amplify";
+import { useAuth } from "@/contexts/AuthContext";
 Amplify.configure(outputs);
 const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
   const client = generateClient<Schema>();
@@ -15,10 +16,10 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     const description = formData.get("description") as string;
     const date = formData.get("date") as string;
     const note = formData.get("note") as string;
-
+    const { userId } = useAuth();
     try {
       client.models.Job.create({
-        jobId: crypto.randomUUID(),
+        userId,
         title: jobTitle,
         joburl: jobUrl,
         company: companyName,

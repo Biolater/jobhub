@@ -13,19 +13,19 @@ const schema = a.schema({
       username: a.string().required(),
       email: a.string().required(),
       password: a.string().required(),
-      jobs: a.hasMany("Job", "jobId"),
+      jobs: a.hasMany("Job", "userId"),
     })
     .authorization((allow) => [allow.publicApiKey(), allow.authenticated()]),
   Job: a
     .model({
-      jobId: a.id().required(),
+      userId: a.id(),
       title: a.string().required(),
       joburl: a.string().required(),
       company: a.string().required(),
       description: a.string().required(),
       date: a.date().required(),
       notes: a.string(),
-      user: a.belongsTo("User", "jobId"),
+      user: a.belongsTo("User", "userId"),
     })
     .authorization((allow) => [allow.publicApiKey(), allow.authenticated()]),
 });
