@@ -5,6 +5,7 @@ import outputs from "@/amplify_outputs.json";
 import { getCurrentUser } from "aws-amplify/auth";
 import { Hub } from "aws-amplify/utils";
 import { useRouter } from "next/navigation";
+import action from "@/app/actions";
 Amplify.configure(outputs);
 
 const AuthContext = createContext({
@@ -28,11 +29,15 @@ export default function AuthContextProvider({
   Hub.listen("auth", ({ payload }) => {
     switch (payload.event) {
       case "signedIn":
+        action(true);
         setIsLoggedIn(true);
+        setUserId(payload.data.username);
         router.push("/jobs");
         break;
       case "signedOut":
+        action(false);
         setIsLoggedIn(false);
+        setUserId("");
         router.push("/");
         break;
       default:
@@ -43,20 +48,22 @@ export default function AuthContextProvider({
     const checkAuth = async () => {
       try {
         const user = await getCurrentUser();
-        
         if (user) {
           setIsLoggedIn(true);
+          action(true);
           setUserId(user.userId);
-          console.log(user);
         }
       } catch (err) {
         setIsLoggedIn(false);
+        action(false);
       }
     };
     checkAuth();
   }, []);
   return (
-    <AuthContext.Provider value={{ isLoggedIn, email, setUserEmail, userId, setUserId }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, email, setUserEmail, userId, setUserId }}
+    >
       {children}
     </AuthContext.Provider>
   );

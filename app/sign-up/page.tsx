@@ -28,7 +28,7 @@ const Signup = () => {
           autoSignIn: false,
         },
       });
-      const { errors, data: newUser } = await client.models.User.create({
+      const { errors } = await client.models.User.create({
         id: userFromAws?.userId,
         email: email,
         username: name,
@@ -38,10 +38,7 @@ const Signup = () => {
         throw new Error(errors[0].message);
       } else {
         setUserEmail(email);
-        setUserId(newUser?.id as string);
         router.push("/confirm-password");
-        console.log(newUser);
-        console.log(userFromAws);
       }
     } catch (error) {
       console.log(error);

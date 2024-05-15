@@ -27,7 +27,6 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
         date,
         notes: note,
       });
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {

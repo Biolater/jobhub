@@ -19,7 +19,7 @@ const ConfirmPassword = () => {
         confirmationCode: code,
       });
       if (isSignUpComplete) {
-        router.push("/sign-in");
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
