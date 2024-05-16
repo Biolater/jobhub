@@ -1,38 +1,59 @@
-import { FC } from "react";
+import React, { FC, useState } from "react";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../../amplify/data/resource";
 import outputs from "../../amplify_outputs.json";
 import { Amplify } from "aws-amplify";
 import { useAuth } from "@/contexts/AuthContext";
 Amplify.configure(outputs);
+
 const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
-  const client = generateClient<Schema>();
+  const [formData, setFormData] = useState({
+    jobTitle: "",
+    jobUrl: "",
+    companyName: "",
+    description: "",
+    date: "",
+    note: "",
+  });
+
   const { userId } = useAuth();
+  const client = generateClient<Schema>();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const jobTitle = formData.get("jobTitle") as string;
-    const jobUrl = formData.get("jobUrl") as string;
-    const companyName = formData.get("companyName") as string;
-    const description = formData.get("description") as string;
-    const date = formData.get("date") as string;
-    const note = formData.get("note") as string;
     try {
-      const data = await client.models.Job.create({
+      await client.models.Job.create({
         userId,
-        title: jobTitle,
-        joburl: jobUrl,
-        company: companyName,
-        description,
-        date,
-        notes: note,
+        title: formData.jobTitle,
+        joburl: formData.jobUrl,
+        company: formData.companyName,
+        description: formData.description,
+        date: formData.date,
+        notes: formData.note,
       });
+      // Reset form fields after successful submission
+      setFormData({
+        jobTitle: "",
+        jobUrl: "",
+        companyName: "",
+        description: "",
+        date: "",
+        note: "",
+      });
+      handleCancel();
     } catch (error) {
       console.log(error);
-    } finally {
-      handleCancel();
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="formItems grid sm:grid-cols-2 gap-x-4 gap-y-2">
@@ -45,6 +66,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             name="jobTitle"
             id="jobTitle"
+            value={formData.jobTitle}
+            onChange={handleChange}
             required
           />
         </div>
@@ -57,6 +80,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             id="jobUrl"
             name="jobUrl"
+            value={formData.jobUrl}
+            onChange={handleChange}
             required
           />
         </div>
@@ -72,6 +97,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             id="companyName"
             name="companyName"
+            value={formData.companyName}
+            onChange={handleChange}
             required
           />
         </div>
@@ -87,6 +114,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             id="jobDescription"
             name="description"
+            value={formData.description}
+            onChange={handleChange}
             required
           />
         </div>
@@ -95,13 +124,15 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             className="text-medium font-semibold mb-1"
             htmlFor="publishDate"
           >
-            Publish Datw
+            Publish Date
           </label>
           <input
             className="p-2 text-primary bg-whitish rounded-md outline-none"
             type="date"
             id="publishDate"
             name="date"
+            value={formData.date}
+            onChange={handleChange}
             required
           />
         </div>
@@ -114,6 +145,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             id="note"
             name="note"
+            value={formData.note}
+            onChange={handleChange}
             required
           />
         </div>

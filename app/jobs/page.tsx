@@ -61,12 +61,11 @@ const Jobs = () => {
 
   }, [userId])
 
-  // JSX return
   return (
     <>
       <Navbar />
       <main>
-        <div className="container text-center px-4 mx-auto">
+        <div className="container text-center p-4 mx-auto">
           {loading && (
             <h1 className="font-semibold text-whitish text-2xl">Loading...</h1>
           )}
@@ -88,7 +87,7 @@ const Jobs = () => {
               <h3 className="text-2xl mb-2 font-semibold text-whitish">Here is your jobs</h3>
               <div className="jobs place-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {userJobs.map((job, index) => (
-                  <JobItem key={index} />
+                  <JobItem jobTitle={job.title} companyName={job.company} key={index} />
                 ))}
               </div>
             </>

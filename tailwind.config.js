@@ -13,7 +13,7 @@ module.exports = {
         accent: '#37AA9C',
         light: '#94F3E4',
         whitish: '#D9D9D9'
-      }
+      },
     },
   },
   plugins: [],
