@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 import { AddIcon } from "../Icons";
 import { Tooltip } from "@nextui-org/tooltip";
-import { AddJobModalPortal } from "@/components";
+import { AddJobModalPortal } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "aws-amplify/auth";
 const Navbar: FC = () => {

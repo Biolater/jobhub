@@ -1,5 +1,5 @@
 "use client";
-import { AddJobForm } from "@/components";
+import { AddJobForm } from "@/components/index";
 import { FC, useRef, MouseEventHandler, RefObject, useEffect } from "react";
 const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
   isActive,

@@ -154,7 +154,17 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
       <footer className="form__footer">
         <div className="form__buttons flex items-center justify-end mt-4">
           <button
-            onClick={handleCancel}
+            onClick={() => {
+              handleCancel(),
+              setFormData({
+                jobTitle: "",
+                jobUrl: "",
+                companyName: "",
+                description: "",
+                date: "",
+                note: "",
+              })
+            }}
             type="button"
             className="px-4 transition-all duration-200 hover:scale-105 active:scale-90 py-2 rounded-md text-whitish font-medium bg-transparent"
           >

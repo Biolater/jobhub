@@ -1,18 +1,18 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NoJobIcon } from "@/components/Icons";
-import { Navbar } from "@/components";
+import { Navbar } from "@/components/index";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
 import { JobTypes } from "@/types/job.types";
-import { JobItem } from "@/components";
+import { JobItem, JobItemModalPortal } from "@/components/index";
 
 const Jobs = () => {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
-
+  const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId } = useAuth();
@@ -51,15 +51,14 @@ const Jobs = () => {
   useEffect(() => {
     const sub = client.models.Job.observeQuery().subscribe({
       next: ({ items }) => {
-        if(userId){
+        if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
           setUserJobs(latestUserJobs);
         }
-      }
-    })
+      },
+    });
     return () => sub.unsubscribe();
-
-  }, [userId])
+  }, [userId]);
 
   return (
     <>
@@ -84,16 +83,34 @@ const Jobs = () => {
           )}
           {!loading && userJobs.length > 0 && (
             <>
-              <h3 className="text-2xl mb-2 font-semibold text-whitish">Here is your jobs</h3>
-              <div className="jobs place-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <h3 className="text-2xl md:text-4xl mb-4 md:mb-6 font-semibold text-whitish">
+                Here is your added jobs
+              </h3>
+              <div className="jobs sm:px-[25px] md:px-[50px] lg:px-[75px] place-items-center grid gap-4">
                 {userJobs.map((job, index) => (
-                  <JobItem jobTitle={job.title} companyName={job.company} key={index} />
+                  <JobItem
+                    jobTitle={job.title}
+                    companyName={job.company}
+                    jobUrl={job.joburl}
+                    onSelect={() => setClickedJobIndex(index)}
+                    key={index}
+                  />
                 ))}
               </div>
             </>
           )}
         </div>
       </main>
+      <JobItemModalPortal
+        isActive={clickedJobIndex !== null}
+        handleCancel={() => setClickedJobIndex(null)}
+        companyName={userJobs[clickedJobIndex || 0]?.company}
+        date={userJobs[clickedJobIndex || 0]?.date}
+        jobDescription={userJobs[clickedJobIndex || 0]?.description}
+        jobTitle={userJobs[clickedJobIndex || 0]?.title}
+        jobUrl={userJobs[clickedJobIndex || 0]?.joburl}
+        notes={userJobs[clickedJobIndex || 0]?.notes || ""}
+      />
     </>
   );
 };

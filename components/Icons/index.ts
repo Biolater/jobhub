@@ -1,3 +1,4 @@
 import AddIcon from "./AddIcon";
 import NoJobIcon from "./NoJobIcon";
-export { AddIcon, NoJobIcon };
+import CloseIcon from "./CloseIcon";
+export { AddIcon, NoJobIcon, CloseIcon };
