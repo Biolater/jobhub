@@ -12,7 +12,8 @@ module.exports = {
         secondary: '#333F44',
         accent: '#37AA9C',
         light: '#94F3E4',
-        whitish: '#D9D9D9'
+        whitish: '#D9D9D9',
+        disabledColor: "#969696",
       },
     },
   },

@@ -7,16 +7,17 @@ import { type Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
 import { JobTypes } from "@/types/job.types";
 import { JobItem, JobItemModalPortal } from "@/components/index";
-
+import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
 const Jobs = () => {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
   const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
+  const { setPreviousJobDetails, setNewJobDetails, newJobDetails } =
+    useJobDetail();
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId } = useAuth();
-
   // Fetch user data effect
   useEffect(() => {
     const fetchUserData = async () => {
@@ -92,7 +93,19 @@ const Jobs = () => {
                     jobTitle={job.title}
                     companyName={job.company}
                     jobUrl={job.joburl}
-                    onSelect={() => setClickedJobIndex(index)}
+                    onSelect={() => {
+                      setClickedJobIndex(index);
+                      const prevJobDetails = {
+                        title: userJobs[index].title,
+                        jobUrl: userJobs[index].joburl,
+                        company: userJobs[index].company,
+                        description: userJobs[index].description,
+                        date: userJobs[index].date,
+                        notes: userJobs[index]?.notes || "",
+                      };
+                      setPreviousJobDetails(prevJobDetails);
+                      setNewJobDetails(prevJobDetails);
+                    }}
                     key={index}
                   />
                 ))}
@@ -102,14 +115,15 @@ const Jobs = () => {
         </div>
       </main>
       <JobItemModalPortal
+        jobId={userJobs[clickedJobIndex || 0]?.id}
         isActive={clickedJobIndex !== null}
         handleCancel={() => setClickedJobIndex(null)}
-        companyName={userJobs[clickedJobIndex || 0]?.company}
-        date={userJobs[clickedJobIndex || 0]?.date}
-        jobDescription={userJobs[clickedJobIndex || 0]?.description}
-        jobTitle={userJobs[clickedJobIndex || 0]?.title}
-        jobUrl={userJobs[clickedJobIndex || 0]?.joburl}
-        notes={userJobs[clickedJobIndex || 0]?.notes || ""}
+        companyName={newJobDetails?.company}
+        date={newJobDetails?.date}
+        jobDescription={newJobDetails?.description}
+        jobTitle={newJobDetails?.title}
+        jobUrl={newJobDetails?.jobUrl}
+        notes={newJobDetails.notes || ""}
       />
     </>
   );

@@ -31,11 +31,11 @@ const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
   return (
     <div
       onClick={handleClickOutside}
-      className={`addJobModal transition-all duration-300 ${
+      className={`addJobModal fixed transition-all duration-300 ${
         isActive
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
-      } top-0 text-whitish absolute h-screen w-full flex items-center justify-center bg-black/50`}
+      } top-0 text-whitish h-screen w-full flex items-center justify-center bg-black/50`}
     >
       <div
         ref={jobModalRef}

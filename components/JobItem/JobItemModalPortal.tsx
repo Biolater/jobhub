@@ -4,6 +4,7 @@ import { useState, useEffect, FC } from "react";
 import JobItemModal from "./JobItemModal";
 
 type JobItemModalPortalProps = {
+  jobId: string;
   isActive: boolean;
   handleCancel: () => void;
   companyName: string;
@@ -15,6 +16,7 @@ type JobItemModalPortalProps = {
 };
 
 const JobItemModalPortal: FC<JobItemModalPortalProps> = ({
+  jobId,
   isActive,
   handleCancel,
   companyName,
@@ -33,6 +35,7 @@ const JobItemModalPortal: FC<JobItemModalPortalProps> = ({
     isMounted &&
     createPortal(
       <JobItemModal
+        jobId={jobId}
         companyName={companyName}
         jobDescription={jobDescription}
         jobTitle={jobTitle}

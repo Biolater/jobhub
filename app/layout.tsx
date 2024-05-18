@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthContextProvider from "../contexts/AuthContext";
-
+import JobDetailsProvider from "@/contexts/ActiveJobDetailsContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,11 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <AuthContextProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          {children}
-        </body>
-      </html>
+      <JobDetailsProvider>
+        <html lang="en">
+          <body className={inter.className}>{children}</body>
+        </html>
+      </JobDetailsProvider>
     </AuthContextProvider>
   );
 }

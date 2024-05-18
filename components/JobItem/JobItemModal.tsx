@@ -1,14 +1,28 @@
-import { FC, MouseEventHandler, RefObject, useRef } from "react";
+import { FC, MouseEventHandler, RefObject, useRef, useEffect } from "react";
 import { CloseIcon } from "@/components/Icons";
 import { JobItemModalProps } from "@/types/jobitemmodal.types";
 import JobDetail from "./JobDetail";
 import { motion } from "framer-motion";
-type JobDetail = {
+import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
+import { generateClient } from "aws-amplify/data";
+import { type Schema } from "@/amplify/data/resource";
+
+type JobDetailType = {
   sectionName: string;
   content: string;
 };
 
+type UpdatedJobDetails = {
+  title?: string;
+  jobUrl?: string;
+  company?: string;
+  description?: string;
+  date?: string;
+  notes?: string;
+};
+
 const JobItemModal: FC<JobItemModalProps> = ({
+  jobId,
   isActive,
   handleCancel,
   companyName,
@@ -18,7 +32,9 @@ const JobItemModal: FC<JobItemModalProps> = ({
   date,
   notes,
 }) => {
-  const jobDetails: JobDetail[] = [
+  const client = generateClient<Schema>();
+  const { changeMade, changedDetails } = useJobDetail();
+  const jobDetails: JobDetailType[] = [
     {
       sectionName: "Title",
       content: jobTitle,
@@ -44,7 +60,6 @@ const JobItemModal: FC<JobItemModalProps> = ({
       content: notes,
     },
   ];
-  const footerButtons: string[] = ["Cancel", "Save"];
   const jobDetailsRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
   const handleOutsideClick: MouseEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
@@ -55,6 +70,27 @@ const JobItemModal: FC<JobItemModalProps> = ({
       handleCancel();
     }
   };
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleCancel();
+      }
+    };
+    document.addEventListener("keydown", handleKeydown);
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, [handleCancel]);
+
+  const cancelButtonVariants = {
+    transparent: { backgroundColor: "transparent" },
+  };
+
+  const saveButtonVariants = {
+    default: { backgroundColor: "#969696" },
+    save: { backgroundColor: "#333F44" },
+  };
+
   return (
     <div
       onClick={handleOutsideClick}
@@ -87,24 +123,68 @@ const JobItemModal: FC<JobItemModalProps> = ({
           </div>
         </main>
         <footer className="jobDetails__footer p-4 border-t border-white/20 flex items-center justify-between text-whitish">
-          {footerButtons.map((button, index) => (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                if (index === 0) {
-                  handleCancel();
-                } else {
+          <motion.button
+            variants={cancelButtonVariants}
+            initial="transparent"
+            animate="transparent"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleCancel}
+            className="px-4 py-2 rounded-md text-whitish font-medium pointer-events-auto"
+          >
+            Cancel
+          </motion.button>
+          <motion.button
+            variants={saveButtonVariants}
+            initial="default"
+            animate={changeMade ? "save" : "default"}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={async () => {
+              if (changeMade) {
+                const updatedData: UpdatedJobDetails = {};
+                changedDetails.forEach((detail) => {
+                  switch (detail) {
+                    case "title":
+                      updatedData.title = jobTitle;
+                      break;
+                    case "joburl":
+                      updatedData.jobUrl = jobUrl;
+                      break;
+                    case "company":
+                      updatedData.company = companyName;
+                      break;
+                    case "description":
+                      updatedData.description = jobDescription;
+                      break;
+                    case "date":
+                      updatedData.date = date;
+                      break;
+                    case "notes":
+                      updatedData.notes = notes;
+                      break;
+                    default:
+                      break;
+                  }
+                });
+
+                const { data: updatedJob, errors } =
+                  await client.models.Job.update({
+                    id: jobId,
+                    ...updatedData,
+                  });
+                console.log(updatedJob);
+                if (errors) {
+                  console.log(errors);
                 }
-              }}
-              key={index}
-              className={`px-4 py-2 rounded-md text-whitish font-medium ${
-                index === 1 ? "bg-secondary" : ""
-              }`}
-            >
-              {button}
-            </motion.button>
-          ))}
+              }
+            }}
+            className={`px-4 py-2 rounded-md text-whitish font-medium ${
+              !changeMade ? "pointer-events-none" : ""
+            }`}
+          >
+            Save
+          </motion.button>
         </footer>
       </div>
     </div>
