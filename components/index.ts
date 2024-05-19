@@ -4,4 +4,13 @@ import AddJobForm from "./JobModal/AddJobForm";
 import AddJobModalPortal from "./JobModal/AddJobModalPortal";
 import JobItem from "./JobItem/JobItem";
 import JobItemModalPortal from "./JobItem/JobItemModalPortal";
-export { Navbar, AddJobModal, AddJobForm, AddJobModalPortal, JobItem, JobItemModalPortal };
+import DeleteJobModalPortal from "./DeleteJob/DeleteJobModalPortal";
+export {
+  Navbar,
+  AddJobModal,
+  AddJobForm,
+  AddJobModalPortal,
+  JobItem,
+  JobItemModalPortal,
+  DeleteJobModalPortal,
+};

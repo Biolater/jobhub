@@ -6,15 +6,25 @@ import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
 import { JobTypes } from "@/types/job.types";
-import { JobItem, JobItemModalPortal } from "@/components/index";
+import { AnimatePresence } from "framer-motion";
+import {
+  JobItem,
+  JobItemModalPortal,
+  DeleteJobModalPortal,
+} from "@/components/index";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
+
 const Jobs = () => {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
   const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
-  const { setPreviousJobDetails, setNewJobDetails, newJobDetails } =
-    useJobDetail();
+  const {
+    setPreviousJobDetails,
+    setNewJobDetails,
+    newJobDetails,
+    deleteJobModalActive,
+  } = useJobDetail();
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId } = useAuth();
@@ -90,6 +100,8 @@ const Jobs = () => {
               <div className="jobs sm:px-[25px] md:px-[50px] lg:px-[75px] place-items-center grid gap-4">
                 {userJobs.map((job, index) => (
                   <JobItem
+                    index={index}
+                    jobId={job.id}
                     jobTitle={job.title}
                     companyName={job.company}
                     jobUrl={job.joburl}
@@ -125,6 +137,11 @@ const Jobs = () => {
         jobUrl={newJobDetails?.jobUrl}
         notes={newJobDetails.notes || ""}
       />
+      <AnimatePresence>
+        {deleteJobModalActive && (
+          <DeleteJobModalPortal jobId={userJobs[clickedJobIndex || 0]?.id} />
+        )}
+      </AnimatePresence>
     </>
   );
 };
