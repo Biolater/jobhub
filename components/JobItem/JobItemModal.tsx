@@ -1,4 +1,11 @@
-import { FC, MouseEventHandler, RefObject, useRef, useEffect } from "react";
+import {
+  FC,
+  MouseEventHandler,
+  RefObject,
+  useRef,
+  useEffect,
+  useState,
+} from "react";
 import { CloseIcon } from "@/components/Icons";
 import { JobItemModalProps } from "@/types/jobitemmodal.types";
 import JobDetail from "./JobDetail";
@@ -6,6 +13,7 @@ import { motion } from "framer-motion";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
+import toast from "react-hot-toast";
 
 type JobDetailType = {
   sectionName: string;
@@ -14,7 +22,7 @@ type JobDetailType = {
 
 type UpdatedJobDetails = {
   title?: string;
-  jobUrl?: string;
+  joburl?: string;
   company?: string;
   description?: string;
   date?: string;
@@ -34,6 +42,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
 }) => {
   const client = generateClient<Schema>();
   const { changeMade, changedDetails } = useJobDetail();
+  const [loading, setLoading] = useState<boolean>(false);
   const jobDetails: JobDetailType[] = [
     {
       sectionName: "Title",
@@ -100,7 +109,10 @@ const JobItemModal: FC<JobItemModalProps> = ({
           : "opacity-0 pointer-events-none"
       } fixed top-0 left-0 right-0 bottom-0 bg-black/50 h-screen w-full flex items-center justify-center`}
     >
-      <div ref={jobDetailsRef} className="jobDetails w-full bg-primary">
+      <div
+        ref={jobDetailsRef}
+        className="jobDetails w-full sm:w-1/2 sm:rounded-lg bg-primary"
+      >
         <header className="jobDetails__header p-4 border-b border-white/20 flex items-center justify-between text-whitish">
           <p>View or edit job details</p>
           <motion.button
@@ -135,6 +147,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
             Cancel
           </motion.button>
           <motion.button
+            disabled={loading}
             variants={saveButtonVariants}
             initial="default"
             animate={changeMade ? "save" : "default"}
@@ -142,6 +155,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
             whileTap={{ scale: 0.9 }}
             onClick={async () => {
               if (changeMade) {
+                setLoading(true);
                 const updatedData: UpdatedJobDetails = {};
                 changedDetails.forEach((detail) => {
                   switch (detail) {
@@ -149,7 +163,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
                       updatedData.title = jobTitle;
                       break;
                     case "joburl":
-                      updatedData.jobUrl = jobUrl;
+                      updatedData.joburl = jobUrl;
                       break;
                     case "company":
                       updatedData.company = companyName;
@@ -168,14 +182,24 @@ const JobItemModal: FC<JobItemModalProps> = ({
                   }
                 });
 
-                const { data: updatedJob, errors } =
-                  await client.models.Job.update({
-                    id: jobId,
-                    ...updatedData,
-                  });
-                console.log(updatedJob);
-                if (errors) {
-                  console.log(errors);
+                try {
+                  const { errors, data: newJob } =
+                    await client.models.Job.update({
+                      id: jobId,
+                      ...updatedData,
+                    });
+                  if (errors) {
+                    throw new Error(errors[0].message);
+                  }
+                  if (newJob) {
+                    toast.success("Job details updated successfully");
+                  }
+                } catch (error) {
+                  console.log(error);
+                  toast.error("Failed to update job details");
+                } finally {
+                  setLoading(false);
+                  handleCancel();
                 }
               }
             }}
@@ -183,7 +207,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
               !changeMade ? "pointer-events-none" : ""
             }`}
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </motion.button>
         </footer>
       </div>

@@ -102,7 +102,9 @@ export default function JobDetailsProvider({
     setChangeMade(hasChanged);
     setChangedDetails(Array.from(changedSet));
   }, [newJobDetails, previousJobDetails]);
-
+  useEffect(() => {
+    console.log(changedDetails)
+  },[changedDetails])
   const value: JobDetailsContextType = {
     previousJobDetails,
     newJobDetails,
