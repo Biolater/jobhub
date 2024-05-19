@@ -14,6 +14,7 @@ module.exports = {
         light: '#94F3E4',
         whitish: '#D9D9D9',
         disabledColor: "#969696",
+        danger: '#E9192D',
       },
     },
   },

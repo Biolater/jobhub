@@ -24,6 +24,8 @@ const Jobs = () => {
     setNewJobDetails,
     newJobDetails,
     deleteJobModalActive,
+    setDeleteJobId,
+    deleteJobId,
   } = useJobDetail();
   // Amplify client setup
   const client = generateClient<Schema>();
@@ -70,6 +72,7 @@ const Jobs = () => {
     });
     return () => sub.unsubscribe();
   }, [userId]);
+
 
   return (
     <>
@@ -118,6 +121,9 @@ const Jobs = () => {
                       setPreviousJobDetails(prevJobDetails);
                       setNewJobDetails(prevJobDetails);
                     }}
+                    onDeleteButtonSelect={() => {
+                      setDeleteJobId(userJobs[index]?.id);
+                    }}
                     key={index}
                   />
                 ))}
@@ -138,9 +144,7 @@ const Jobs = () => {
         notes={newJobDetails.notes || ""}
       />
       <AnimatePresence>
-        {deleteJobModalActive && (
-          <DeleteJobModalPortal jobId={userJobs[clickedJobIndex || 0]?.id} />
-        )}
+        {deleteJobModalActive && <DeleteJobModalPortal jobId={deleteJobId} />}
       </AnimatePresence>
     </>
   );

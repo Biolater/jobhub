@@ -25,11 +25,13 @@ type JobDetailsContextType = {
   changeMade: boolean;
   changedDetails: string[];
   deleteJobModalActive: boolean;
+  deleteJobId: string;
   setPreviousJobDetails: Dispatch<SetStateAction<JobDetails>>;
   setNewJobDetails: Dispatch<SetStateAction<JobDetails>>;
   setChangeMade: Dispatch<SetStateAction<boolean>>;
   setChangedDetails: Dispatch<SetStateAction<string[]>>;
   setDeleteJobModalActive: Dispatch<SetStateAction<boolean>>;
+  setDeleteJobId: Dispatch<SetStateAction<string>>;
 };
 
 // Create the context with default values
@@ -53,11 +55,13 @@ const JobDetailsContext = createContext<JobDetailsContextType>({
   changeMade: false,
   changedDetails: [],
   deleteJobModalActive: false,
+  deleteJobId: "",
   setPreviousJobDetails: () => {},
   setNewJobDetails: () => {},
   setChangeMade: () => {},
   setChangedDetails: () => {},
   setDeleteJobModalActive: () => {},
+  setDeleteJobId: () => {},
 });
 
 // Custom hook to use the context
@@ -89,6 +93,7 @@ export default function JobDetailsProvider({
   const [changedDetails, setChangedDetails] = useState<string[]>([]);
   const [deleteJobModalActive, setDeleteJobModalActive] =
     useState<boolean>(false);
+  const [deleteJobId, setDeleteJobId] = useState<string>("");
   useEffect(() => {
     const keys = Object.keys(previousJobDetails) as (keyof JobDetails)[];
     let hasChanged = false;
@@ -113,11 +118,13 @@ export default function JobDetailsProvider({
     changeMade,
     changedDetails,
     deleteJobModalActive,
+    deleteJobId,
     setPreviousJobDetails,
     setNewJobDetails,
     setChangeMade,
     setChangedDetails,
     setDeleteJobModalActive,
+    setDeleteJobId,
   };
 
   return (
