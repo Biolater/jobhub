@@ -47,6 +47,12 @@ const Jobs = () => {
             const sanitizedJobs = userJobs.map((job) => ({
               ...job,
               notes: job.notes || "",
+              status: (job.status || "Saved") as
+                | "Saved"
+                | "Applied"
+                | "Interviewing"
+                | "Hired"
+                | "Rejected",
             }));
             setUserJobs(sanitizedJobs);
           }
@@ -66,13 +72,22 @@ const Jobs = () => {
       next: ({ items }) => {
         if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
-          setUserJobs(latestUserJobs);
+          const sanitizedJobs = latestUserJobs.map((job) => ({
+            ...job,
+            notes: job.notes || "",
+            status: (job.status || "Saved") as
+              | "Saved"
+              | "Applied"
+              | "Interviewing"
+              | "Hired"
+              | "Rejected",
+          }));
+          setUserJobs(sanitizedJobs);
         }
       },
     });
     return () => sub.unsubscribe();
   }, [userId]);
-
 
   return (
     <>
@@ -114,6 +129,7 @@ const Jobs = () => {
                         title: userJobs[index].title,
                         jobUrl: userJobs[index].joburl,
                         company: userJobs[index].company,
+                        status: userJobs[index].status,
                         description: userJobs[index].description,
                         date: userJobs[index].date,
                         notes: userJobs[index]?.notes || "",
@@ -138,6 +154,7 @@ const Jobs = () => {
         handleCancel={() => setClickedJobIndex(null)}
         companyName={newJobDetails?.company}
         date={newJobDetails?.date}
+        status={newJobDetails?.status}
         jobDescription={newJobDetails?.description}
         jobTitle={newJobDetails?.title}
         jobUrl={newJobDetails?.jobUrl}

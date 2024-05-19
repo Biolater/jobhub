@@ -1,9 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../../amplify/data/resource";
 import outputs from "../../amplify_outputs.json";
 import { Amplify } from "aws-amplify";
 import { useAuth } from "@/contexts/AuthContext";
+import toast from "react-hot-toast";
 Amplify.configure(outputs);
 
 const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
@@ -11,15 +12,26 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     jobTitle: "",
     jobUrl: "",
     companyName: "",
+    status: "Saved" as
+      | "Saved"
+      | "Applied"
+      | "Interviewing"
+      | "Hired"
+      | "Rejected",
     description: "",
     date: "",
     note: "",
   });
 
+
   const { userId } = useAuth();
   const client = generateClient<Schema>();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -30,20 +42,29 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await client.models.Job.create({
+      const { data, errors } = await client.models.Job.create({
         userId,
         title: formData.jobTitle,
         joburl: formData.jobUrl,
         company: formData.companyName,
         description: formData.description,
+        status: formData.status,
         date: formData.date,
         notes: formData.note,
       });
+      if (errors) {
+        toast.error("Error creating job");
+        throw new Error(errors[0].message);
+      }
+      if (data) {
+        toast.success("Job created successfully");
+      }
       // Reset form fields after successful submission
       setFormData({
         jobTitle: "",
         jobUrl: "",
         companyName: "",
+        status: "Saved",
         description: "",
         date: "",
         note: "",
@@ -137,6 +158,25 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
           />
         </div>
         <div className="formItem flex flex-col">
+          <label className="text-medium font-semibold mb-1" htmlFor="status">
+            Job Status
+          </label>
+          <select
+            className="p-2 text-primary bg-whitish rounded-md outline-none"
+            id="status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            required
+          >
+            <option value="Saved">Saved</option>
+            <option value="Applied">Applied</option>
+            <option value="Interviewing">Interviewing</option>
+            <option value="Hired">Hired</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div className="formItem flex flex-col">
           <label className="text-medium font-semibold mb-1" htmlFor="note">
             Enter a note
           </label>
@@ -156,14 +196,15 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
           <button
             onClick={() => {
               handleCancel(),
-              setFormData({
-                jobTitle: "",
-                jobUrl: "",
-                companyName: "",
-                description: "",
-                date: "",
-                note: "",
-              })
+                setFormData({
+                  jobTitle: "",
+                  jobUrl: "",
+                  companyName: "",
+                  description: "",
+                  status: "Saved",
+                  date: "",
+                  note: "",
+                });
             }}
             type="button"
             className="px-4 transition-all duration-200 hover:scale-105 active:scale-90 py-2 rounded-md text-whitish font-medium bg-transparent"

@@ -10,6 +10,7 @@ type JobItemModalPortalProps = {
   companyName: string;
   jobDescription: string;
   jobTitle: string;
+  status: "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
   jobUrl: string;
   date: string;
   notes: string;
@@ -24,6 +25,7 @@ const JobItemModalPortal: FC<JobItemModalPortalProps> = ({
   jobTitle,
   jobUrl,
   date,
+  status,
   notes,
 }) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -39,6 +41,7 @@ const JobItemModalPortal: FC<JobItemModalPortalProps> = ({
         companyName={companyName}
         jobDescription={jobDescription}
         jobTitle={jobTitle}
+        status={status}
         jobUrl={jobUrl}
         date={date}
         notes={notes}

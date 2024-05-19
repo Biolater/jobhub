@@ -25,6 +25,7 @@ type UpdatedJobDetails = {
   joburl?: string;
   company?: string;
   description?: string;
+  status?: "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
   date?: string;
   notes?: string;
 };
@@ -35,6 +36,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
   handleCancel,
   companyName,
   jobDescription,
+  status,
   jobTitle,
   jobUrl,
   date,
@@ -63,6 +65,10 @@ const JobItemModal: FC<JobItemModalProps> = ({
     {
       sectionName: "Publish Date",
       content: date,
+    },
+    {
+      sectionName: "Status",
+      content: status,
     },
     {
       sectionName: "Notes",
@@ -176,6 +182,10 @@ const JobItemModal: FC<JobItemModalProps> = ({
                       break;
                     case "notes":
                       updatedData.notes = notes;
+                      break;
+                    case "status":
+                      //@ts-ignore
+                      updatedData.status = status as "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
                       break;
                     default:
                       break;

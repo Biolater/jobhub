@@ -22,6 +22,7 @@ const schema = a.schema({
       title: a.string().required(),
       joburl: a.string().required(),
       company: a.string().required(),
+      status: a.enum(["Saved", "Applied", "Interviewing", "Hired", "Rejected"]),
       description: a.string().required(),
       date: a.date().required(),
       notes: a.string(),

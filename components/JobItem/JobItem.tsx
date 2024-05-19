@@ -18,7 +18,7 @@ const variants = {
   exit: {
     opacity: 0,
     y: 30,
-  }
+  },
 };
 
 type JobItemProps = {
@@ -81,11 +81,13 @@ const JobItem: FC<JobItemProps> = ({
   );
 };
 
-const DeleteButton: FC<{ onDeleteButtonSelect: () => void }> = ({ onDeleteButtonSelect }) => {
+const DeleteButton: FC<{ onDeleteButtonSelect: () => void }> = ({
+  onDeleteButtonSelect,
+}) => {
   const { setDeleteJobModalActive } = useJobDetail();
   const handleClick = () => {
     setDeleteJobModalActive(true);
-  }
+  };
   return (
     <motion.div
       onClick={() => {

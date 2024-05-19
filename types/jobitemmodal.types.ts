@@ -4,6 +4,7 @@ export type JobItemModalProps = {
   handleCancel: () => void;
   jobTitle: string;
   companyName: string;
+  status: "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
   jobUrl: string;
   jobDescription: string;
   date: string;

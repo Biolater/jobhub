@@ -14,6 +14,7 @@ type JobDetails = {
   title: string;
   jobUrl: string;
   company: string;
+  status: "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
   description: string;
   date: string;
   notes: string;
@@ -41,6 +42,7 @@ const JobDetailsContext = createContext<JobDetailsContextType>({
     jobUrl: "",
     company: "",
     description: "",
+    status: "Saved",
     date: "",
     notes: "",
   },
@@ -49,6 +51,7 @@ const JobDetailsContext = createContext<JobDetailsContextType>({
     jobUrl: "",
     company: "",
     description: "",
+    status: "Saved",
     date: "",
     notes: "",
   },
@@ -77,6 +80,7 @@ export default function JobDetailsProvider({
     title: "",
     jobUrl: "",
     company: "",
+    status: "Saved",
     description: "",
     date: "",
     notes: "",
@@ -85,6 +89,7 @@ export default function JobDetailsProvider({
     title: "",
     jobUrl: "",
     company: "",
+    status: "Saved",
     description: "",
     date: "",
     notes: "",
