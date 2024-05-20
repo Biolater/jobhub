@@ -41,6 +41,15 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Validation check
+    for (const [_, value] of Object.entries(formData)) {
+      if (!value) {
+        toast.error(`Please fill all fields.`);
+        return;
+      }
+    }
+
     try {
       const { data, errors } = await client.models.Job.create({
         userId,
@@ -74,6 +83,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
       console.log(error);
     }
   };
+
+
 
   return (
     <form onSubmit={handleSubmit}>
