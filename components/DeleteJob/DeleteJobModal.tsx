@@ -1,3 +1,17 @@
+/**
+ * @file DeleteJobModal component
+ * @description A modal to confirm or cancel job deletion
+ *
+ * @requires
+ * - react
+ * - framer-motion
+ * - react-hot-toast
+ * - aws-amplify/data
+ * - amplify-data-types
+ *
+ * @author Yusifbek Amirkhanov
+ */
+
 import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CloseIcon } from "../Icons";
@@ -5,6 +19,10 @@ import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
 import toast from "react-hot-toast";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
+
+/**
+ * Variants for close icon animation
+ */
 const closeIconVariants = {
   whileHover: {
     scale: 1.2,
@@ -14,6 +32,9 @@ const closeIconVariants = {
   },
 };
 
+/**
+ * Variants for modal buttons animation
+ */
 const ModalButtonVariants = {
   whileHover: {
     scale: 1.05,
@@ -34,6 +55,12 @@ const ModalButtonVariants = {
   },
 };
 
+/**
+ * DeleteJobModal component
+ *
+ * @param {Object} props - Component props
+ * @param {string} jobId - Job ID to delete
+ */
 const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
   const client = generateClient<Schema>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,20 +88,22 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
       handleClose();
     }
   };
+
+  /**
+   * Effect hook to listen for escape key press and close the modal
+   */
   useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         handleClose();
       }
-    });
+    };
 
-    return () =>
-      document.removeEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          handleClose();
-        }
-      });
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}

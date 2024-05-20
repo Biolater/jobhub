@@ -1,22 +1,44 @@
-"use client";
+/**
+ * @fileoverview The Navbar component
+ * @author Yusif Bekirov
+ */
 import { FC, useState } from "react";
 import { AddIcon } from "../Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { AddJobModalPortal } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "aws-amplify/auth";
+
+/**
+ * The Navbar component
+ * @param {Object} props - Component props
+ * @return {ReactElement} - Component
+ */
 const Navbar: FC = () => {
   const [jobModalActive, setJobModalActive] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
+
+  /**
+   * Toggles the job modal active state
+   */
   const handleJobModal = () => {
     setJobModalActive(true);
   };
+
+  /**
+   * Closes the job modal
+   */
   const handleJobModalCancel = () => {
     setJobModalActive(false);
   };
+
+  /**
+   * Signs out the user
+   */
   const handleSignOut = async () => {
     await signOut();
-  }
+  };
+
   return (
     <header>
       <nav className="navbar">
@@ -51,7 +73,11 @@ const Navbar: FC = () => {
                 </div>
               </button>
             </Tooltip>
-            {isLoggedIn && <button onClick={handleSignOut} className="navbar__logoutBtn">Logout</button>}
+            {isLoggedIn && (
+              <button onClick={handleSignOut} className="navbar__logoutBtn">
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </nav>
