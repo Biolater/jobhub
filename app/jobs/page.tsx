@@ -1,4 +1,4 @@
-'use client'
+"use client";
 /**
  * The Jobs component renders the main page of the application.
  * It fetches the user's jobs from the Amplify Data Store and displays them.
@@ -36,7 +36,7 @@ export default function Jobs() {
 
   // Amplify client setup
   const client = generateClient<Schema>();
-  const { userId } = useAuth();
+  const { userId, setUserName, setUserJobStatuses } = useAuth();
 
   // Fetch user data effect
   useEffect(() => {
@@ -46,13 +46,18 @@ export default function Jobs() {
         const { data: userData, errors } = await client.models.User.get({
           id: userId,
         });
+
         // Error handling
         if (errors) {
           throw new Error(errors[0].message);
         } else {
+          setUserName(userData?.username || "");
           // Get the user's jobs from the Data Store
           const userJobs = (await userData?.jobs())?.data;
-          // Sanitize the jobs data
+          const jobStatuses = userJobs?.map((job) => job.status);
+          if (jobStatuses && jobStatuses.length > 0) {
+            setUserJobStatuses(jobStatuses);
+          }
           const sanitizedJobs = userJobs?.map((job) => ({
             ...job,
             notes: job.notes || "",
@@ -81,6 +86,8 @@ export default function Jobs() {
         // Update the state with the latest user jobs
         if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
+          const jobStatuses = latestUserJobs?.map((job) => job.status);
+          setUserJobStatuses(jobStatuses);
           const sanitizedJobs = latestUserJobs.map((job) => ({
             ...job,
             notes: job.notes || "",
@@ -175,4 +182,3 @@ export default function Jobs() {
     </>
   );
 }
-

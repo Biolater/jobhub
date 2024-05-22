@@ -11,9 +11,13 @@ Amplify.configure(outputs);
 const AuthContext = createContext({
   isLoggedIn: false,
   email: "",
-  setUserEmail: (email: string) => {},
+  userName: "",
   userId: "",
+  userJobStatuses: [""],
+  setUserEmail: (email: string) => {},
   setUserId: (id: string) => {},
+  setUserName: (name: string) => {},
+  setUserJobStatuses: (jobs: any) => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -26,9 +30,13 @@ export default function AuthContextProvider({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setUserEmail] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [userJobStatuses, setUserJobStatuses] = useState<string[]>([]);
   Hub.listen("auth", ({ payload }) => {
     switch (payload.event) {
       case "signedIn":
+        //@ts-ignore
+        setUserEmail(payload.data.signInDetails?.loginId);
         action(true);
         setIsLoggedIn(true);
         setUserId(payload.data.username);
@@ -38,6 +46,8 @@ export default function AuthContextProvider({
         action(false);
         setIsLoggedIn(false);
         setUserId("");
+        setUserEmail("");
+        setUserName("");
         router.push("/");
         break;
       default:
@@ -52,17 +62,33 @@ export default function AuthContextProvider({
           setIsLoggedIn(true);
           action(true);
           setUserId(user.userId);
+          if (!email) {
+            setUserEmail(user.signInDetails?.loginId || "");
+          }
         }
       } catch (err) {
         setIsLoggedIn(false);
+        setUserId("");
+        setUserEmail("");
         action(false);
+        setUserName("");
       }
     };
     checkAuth();
   }, []);
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, email, setUserEmail, userId, setUserId }}
+      value={{
+        isLoggedIn,
+        email,
+        setUserEmail,
+        userId,
+        setUserId,
+        userName,
+        setUserName,
+        userJobStatuses,
+        setUserJobStatuses,
+      }}
     >
       {children}
     </AuthContext.Provider>

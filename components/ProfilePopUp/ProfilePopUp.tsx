@@ -4,6 +4,7 @@ import ProfileBadge from "./ProfileBadge";
 import { UserCircleIcon, LogoutIcon } from "../Icons";
 import ProfileActionButton from "./ProfileActionButton";
 import { signOut } from "aws-amplify/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 const profilePopUpVariants = {
   inital: {
@@ -31,39 +32,6 @@ type profileActionsItem = {
   icon: JSX.Element;
   text: string;
 };
-
-const badgeItems: badgeItem[] = [
-  {
-    bgColor: "bg-gray-700",
-    textColor: "text-gray-300",
-    content: "Saved",
-    contentValue: 0,
-  },
-  {
-    bgColor: "bg-yellow-900",
-    textColor: "text-yellow-300",
-    content: "Applied",
-    contentValue: 0,
-  },
-  {
-    bgColor: "bg-green-900",
-    textColor: "text-green-300",
-    content: "Interviewing",
-    contentValue: 0,
-  },
-  {
-    bgColor: "bg-indigo-900",
-    textColor: "text-indigo-300",
-    content: "Hired",
-    contentValue: 0,
-  },
-  {
-    bgColor: "bg-red-900",
-    textColor: "text-red-300",
-    content: "Rejected",
-    contentValue: 0,
-  },
-];
 
 const profileActions: profileActionsItem[] = [
   {
@@ -100,6 +68,45 @@ const handleProfileActionClick = (text: string) => {
 const ProfilePopUp: FC<{
   handleOutsideClickPopUp: (event: MouseEvent) => void;
 }> = ({ handleOutsideClickPopUp }) => {
+  const { email, userName, userJobStatuses } = useAuth();
+  const badgeItems: badgeItem[] = [
+    {
+      bgColor: "bg-gray-700",
+      textColor: "text-gray-300",
+      content: "Saved",
+      contentValue: userJobStatuses?.filter((status) => status === "Saved")
+        .length,
+    },
+    {
+      bgColor: "bg-yellow-900",
+      textColor: "text-yellow-300",
+      content: "Applied",
+      contentValue: userJobStatuses?.filter((status) => status === "Applied")
+        .length,
+    },
+    {
+      bgColor: "bg-green-900",
+      textColor: "text-green-300",
+      content: "Interviewing",
+      contentValue: userJobStatuses?.filter(
+        (status) => status === "Interviewing"
+      ).length,
+    },
+    {
+      bgColor: "bg-indigo-900",
+      textColor: "text-indigo-300",
+      content: "Hired",
+      contentValue: userJobStatuses?.filter((status) => status === "Hired")
+        .length,
+    },
+    {
+      bgColor: "bg-red-900",
+      textColor: "text-red-300",
+      content: "Rejected",
+      contentValue: userJobStatuses?.filter((status) => status === "Rejected")
+        .length,
+    },
+  ];
   const profilePopUpRef = useRef<HTMLDivElement>(null);
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -128,8 +135,10 @@ const ProfilePopUp: FC<{
         <div className="w-full h-full bg-black rounded-full"></div>
       </div>
       <div className="profile__details text-center text-whitish">
-        <h3 className="profile__name text-2xl font-semibold">Hi, Murad 😊</h3>
-        <p className="profile__email mb-2">yusifov@example.com</p>
+        <h3 className="profile__name text-2xl font-semibold">
+          Hi, {userName} 😊
+        </h3>
+        <p className="profile__email mb-2">{email}</p>
         <div className="badges flex items-center text-xs flex-wrap justify-center font-medium gap-2">
           {badgeItems.map((item, index) => (
             <ProfileBadge
