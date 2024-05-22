@@ -8,7 +8,7 @@ type Props = {
 
 const profileActionButtonVariants = {
   whileHover: {
-    scale: 1.05,
+    scale: 1.05 ,
     transition: {
       type: "spring",
       stiffness: 400,
@@ -16,7 +16,7 @@ const profileActionButtonVariants = {
     },
   },
   whileTap: {
-    scale: 0.99,
+    scale: 0.95,
     transition: {
       type: "spring",
       stiffness: 400,
