@@ -23,7 +23,6 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     note: "",
   });
 
-
   const { userId } = useAuth();
   const client = generateClient<Schema>();
 
@@ -83,8 +82,6 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
       console.log(error);
     }
   };
-
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -196,9 +193,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
             type="text"
             id="note"
             name="note"
-            value={formData.note}
+            value={formData?.note}
             onChange={handleChange}
-            required
           />
         </div>
       </div>

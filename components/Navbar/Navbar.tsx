@@ -5,10 +5,9 @@
 import { FC, useState } from "react";
 import { AddIcon } from "../Icons";
 import { Tooltip } from "@nextui-org/tooltip";
-import { AddJobModalPortal } from "@/components/index";
+import { AddJobModalPortal, ProfilePopUp } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
-import { signOut } from "aws-amplify/auth";
-
+import { AnimatePresence } from "framer-motion";
 /**
  * The Navbar component
  * @param {Object} props - Component props
@@ -16,6 +15,7 @@ import { signOut } from "aws-amplify/auth";
  */
 const Navbar: FC = () => {
   const [jobModalActive, setJobModalActive] = useState<boolean>(false);
+  const [profilePopUpActive, setProfilePopUpActive] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
 
   /**
@@ -33,16 +33,17 @@ const Navbar: FC = () => {
   };
 
   /**
-   * Signs out the user
+   * handles the profile pop up
    */
-  const handleSignOut = async () => {
-    await signOut();
+  const handleProfilePopUp = () => {
+    setProfilePopUpActive((prev) => !prev);
   };
+
 
   return (
     <header>
       <nav className="navbar">
-        <div className="container px-4 py-4 mx-auto flex items-center justify-between">
+        <div className="container relative px-4 py-4 mx-auto flex items-center justify-between">
           <Tooltip
             className="bg-[#3C4043] text-sm px-2 py-1 rounded-sm text-whitish"
             placement="bottom"
@@ -56,7 +57,7 @@ const Navbar: FC = () => {
               <span className="bg-whitish h-[3px] w-5"></span>
             </button>
           </Tooltip>
-          <div className="navbar__actions flex items-center justify-center">
+          <div className="navbar__actions relative gap-4 flex items-center justify-center">
             <Tooltip
               className="bg-[#3C4043] text-sm px-2 py-1 rounded-sm text-whitish"
               content="Add Job"
@@ -74,11 +75,14 @@ const Navbar: FC = () => {
               </button>
             </Tooltip>
             {isLoggedIn && (
-              <button onClick={handleSignOut} className="navbar__logoutBtn">
-                Logout
+              <button onClick={handleProfilePopUp} className="profile__button z-10 relative">
+                <div className="profile__picture size-9 bg-black rounded-full"></div>
               </button>
             )}
           </div>
+          <AnimatePresence>
+            {profilePopUpActive && <ProfilePopUp />}
+          </AnimatePresence>
         </div>
       </nav>
       <AddJobModalPortal

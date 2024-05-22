@@ -111,7 +111,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
       onClick={handleOutsideClick}
       className={`jobDetails__overlay transition-all duration-300 ${
         isActive
-          ? "opacity-100 pointer-events-auto"
+          ? "opacity-100 pointer-events-auto z-20"
           : "opacity-0 pointer-events-none"
       } fixed top-0 left-0 right-0 bottom-0 bg-black/50 h-screen w-full flex items-center justify-center`}
     >
@@ -185,7 +185,12 @@ const JobItemModal: FC<JobItemModalProps> = ({
                       break;
                     case "status":
                       //@ts-ignore
-                      updatedData.status = status as "Saved" | "Applied" | "Interviewing" | "Hired" | "Rejected";
+                      updatedData.status = status as
+                        | "Saved"
+                        | "Applied"
+                        | "Interviewing"
+                        | "Hired"
+                        | "Rejected";
                       break;
                     default:
                       break;

@@ -1,4 +1,11 @@
-"use client";
+'use client'
+/**
+ * The Jobs component renders the main page of the application.
+ * It fetches the user's jobs from the Amplify Data Store and displays them.
+ * It also allows users to select a job, view its details, and delete it.
+ *
+ * @returns The main page of the application.
+ */
 import { useState, useEffect } from "react";
 import { NoJobIcon } from "@/components/Icons";
 import { Navbar } from "@/components/index";
@@ -13,8 +20,7 @@ import {
   DeleteJobModalPortal,
 } from "@/components/index";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
-
-const Jobs = () => {
+export default function Jobs() {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
@@ -27,35 +33,38 @@ const Jobs = () => {
     setDeleteJobId,
     deleteJobId,
   } = useJobDetail();
+
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId } = useAuth();
+
   // Fetch user data effect
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Fetch user data from the Amplify Data Store
         const { data: userData, errors } = await client.models.User.get({
           id: userId,
         });
-
         // Error handling
         if (errors) {
           throw new Error(errors[0].message);
         } else {
+          // Get the user's jobs from the Data Store
           const userJobs = (await userData?.jobs())?.data;
-          if (userJobs) {
-            const sanitizedJobs = userJobs.map((job) => ({
-              ...job,
-              notes: job.notes || "",
-              status: (job.status || "Saved") as
-                | "Saved"
-                | "Applied"
-                | "Interviewing"
-                | "Hired"
-                | "Rejected",
-            }));
-            setUserJobs(sanitizedJobs);
-          }
+          // Sanitize the jobs data
+          const sanitizedJobs = userJobs?.map((job) => ({
+            ...job,
+            notes: job.notes || "",
+            status: (job.status || "Saved") as
+              | "Saved"
+              | "Applied"
+              | "Interviewing"
+              | "Hired"
+              | "Rejected",
+          }));
+          // Update the state with the user's jobs
+          setUserJobs(sanitizedJobs || []); // Use || [] to handle undefined case
         }
       } catch (err) {
         console.error(err);
@@ -63,13 +72,13 @@ const Jobs = () => {
         setLoading(false);
       }
     };
-
     if (userId) fetchUserData();
   }, [userId]);
 
   useEffect(() => {
-    const sub = client.models.Job.observeQuery().subscribe({
+    const subscription = client.models.Job.observeQuery().subscribe({
       next: ({ items }) => {
+        // Update the state with the latest user jobs
         if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
           const sanitizedJobs = latestUserJobs.map((job) => ({
@@ -86,7 +95,7 @@ const Jobs = () => {
         }
       },
     });
-    return () => sub.unsubscribe();
+    return () => subscription.unsubscribe();
   }, [userId]);
 
   return (
@@ -165,6 +174,5 @@ const Jobs = () => {
       </AnimatePresence>
     </>
   );
-};
+}
 
-export default Jobs;

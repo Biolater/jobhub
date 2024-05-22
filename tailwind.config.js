@@ -13,8 +13,9 @@ module.exports = {
         accent: '#37AA9C',
         light: '#94F3E4',
         whitish: '#D9D9D9',
-        disabledColor: "#969696",
+        disabledColor: '#969696',
         danger: '#E9192D',
+        zephyr: '#242426'
       },
     },
   },
