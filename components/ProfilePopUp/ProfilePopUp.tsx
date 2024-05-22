@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef, useEffect, FC } from "react";
 import ProfileBadge from "./ProfileBadge";
 import { UserCircleIcon, LogoutIcon } from "../Icons";
 import ProfileActionButton from "./ProfileActionButton";
@@ -79,16 +80,13 @@ const profileActions: profileActionsItem[] = [
  * Signs out the user
  */
 const handleSignOut = async () => {
-  try{
-    toast.promise(
-      signOut(),
-      {
-        loading: "Logging out...",
-        success: "Logged out successfully",
-        error: "Error logging out",
-      }
-    )
-  }catch(err){
+  try {
+    toast.promise(signOut(), {
+      loading: "Logging out...",
+      success: "Logged out successfully",
+      error: "Error logging out",
+    });
+  } catch (err) {
     console.error(err);
   }
 };
@@ -99,9 +97,27 @@ const handleProfileActionClick = (text: string) => {
   }
 };
 
-const ProfilePopUp = () => {
+const ProfilePopUp: FC<{
+  handleOutsideClickPopUp: (event: MouseEvent) => void;
+}> = ({ handleOutsideClickPopUp }) => {
+  const profilePopUpRef = useRef<HTMLDivElement>(null);
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      profilePopUpRef.current &&
+      !profilePopUpRef.current.contains(event.target as Node)
+    ) {
+      handleOutsideClickPopUp(event);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
   return (
     <motion.div
+      ref={profilePopUpRef}
       variants={profilePopUpVariants}
       initial="inital"
       animate="animate"

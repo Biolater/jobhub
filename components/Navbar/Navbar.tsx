@@ -39,6 +39,13 @@ const Navbar: FC = () => {
     setProfilePopUpActive((prev) => !prev);
   };
 
+  /**
+   * handles the outside click for the profile pop up
+   */
+
+  const handleOutsideClickProfilePopUp = () => {
+    setProfilePopUpActive(false);
+  };
 
   return (
     <header>
@@ -75,13 +82,20 @@ const Navbar: FC = () => {
               </button>
             </Tooltip>
             {isLoggedIn && (
-              <button onClick={handleProfilePopUp} className="profile__button z-10 relative">
+              <button
+                onClick={handleProfilePopUp}
+                className="profile__button z-10 relative"
+              >
                 <div className="profile__picture size-9 bg-black rounded-full"></div>
               </button>
             )}
           </div>
           <AnimatePresence>
-            {profilePopUpActive && <ProfilePopUp />}
+            {profilePopUpActive && (
+              <ProfilePopUp
+                handleOutsideClickPopUp={handleOutsideClickProfilePopUp}
+              />
+            )}
           </AnimatePresence>
         </div>
       </nav>
