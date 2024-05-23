@@ -12,7 +12,7 @@ const schema = a.schema({
       id: a.id().required(),
       username: a.string().required(),
       email: a.string().required(),
-      password: a.string().required(),
+      profilePic: a.url(),
       jobs: a.hasMany("Job", "userId"),
     })
     .authorization((allow) => [allow.publicApiKey(), allow.authenticated()]),

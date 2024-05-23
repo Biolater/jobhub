@@ -32,7 +32,6 @@ const Signup = () => {
         id: userFromAws?.userId,
         email: email,
         username: name,
-        password: password,
       });
       if (errors) {
         throw new Error(errors[0].message);
