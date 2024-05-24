@@ -48,7 +48,7 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
   };
 
   return (
-    <header>
+    <header data-testid="navbar">
       <nav className="navbar">
         <div className="container relative px-4 py-2 mx-auto flex items-center justify-between">
           <Tooltip
@@ -59,6 +59,7 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
             closeDelay={0}
           >
             <button
+              data-testid="navbar__hamburgerBtn"
               onClick={onMenuOpen}
               className="navbar__hamburgerBtn  z-[51] transition-all duration-200 active:bg-white/20 size-12 items-center justify-center rounded-full hover:bg-white/10 flex flex-col gap-1"
             >

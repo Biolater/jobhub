@@ -8,7 +8,6 @@
  */
 import { useState, useEffect } from "react";
 import { NoJobIcon } from "@/components/Icons";
-import { Navbar, Sidebar } from "@/components/index";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,12 +19,11 @@ import {
   DeleteJobModalPortal,
 } from "@/components/index";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
-export default function Jobs() {
+export default function Home() {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
   const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const {
     setPreviousJobDetails,
     setNewJobDetails,
@@ -38,13 +36,7 @@ export default function Jobs() {
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId, setUserName, setUserJobStatuses } = useAuth();
-  const handleSidebar = () => {
-    setSidebarOpen((prev: boolean) => !prev);
-  };
 
-  const handleSidebarOutsideClick = () => {
-    setSidebarOpen(false);
-  };
   // Fetch user data effect
   useEffect(() => {
     const fetchUserData = async () => {
@@ -114,15 +106,6 @@ export default function Jobs() {
 
   return (
     <>
-      <Navbar onMenuOpen={handleSidebar} />
-      <AnimatePresence>
-        {sidebarOpen && <Sidebar onOutsideClick={handleSidebarOutsideClick} />}
-      </AnimatePresence>
-      <div
-        className={`main__overlay transition-all duration-300 ${
-          sidebarOpen ? "bg-black/30 z-10" : "-z-10"
-        } fixed top-0 w-full h-screen`}
-      />
       <div className="container relative text-center p-4 mx-auto">
         {loading && (
           <h1 className="font-semibold text-whitish text-2xl">Loading...</h1>
@@ -177,7 +160,6 @@ export default function Jobs() {
           </>
         )}
       </div>
-      <main></main>
       <JobItemModalPortal
         jobId={userJobs[clickedJobIndex || 0]?.id}
         isActive={clickedJobIndex !== null}
