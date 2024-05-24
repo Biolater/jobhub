@@ -6,6 +6,7 @@ import JobItem from "./JobItem/JobItem";
 import JobItemModalPortal from "./JobItem/JobItemModalPortal";
 import DeleteJobModalPortal from "./DeleteJob/DeleteJobModalPortal";
 import ProfilePopUp from "./ProfilePopUp/ProfilePopUp";
+import Sidebar from "./Sidebar/Sidebar";
 export {
   Navbar,
   AddJobModal,
@@ -14,5 +15,6 @@ export {
   JobItem,
   JobItemModalPortal,
   DeleteJobModalPortal,
-  ProfilePopUp
+  ProfilePopUp,
+  Sidebar,
 };

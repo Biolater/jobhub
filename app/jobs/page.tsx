@@ -8,7 +8,7 @@
  */
 import { useState, useEffect } from "react";
 import { NoJobIcon } from "@/components/Icons";
-import { Navbar } from "@/components/index";
+import { Navbar, Sidebar } from "@/components/index";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +25,7 @@ export default function Jobs() {
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
   const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const {
     setPreviousJobDetails,
     setNewJobDetails,
@@ -37,6 +38,9 @@ export default function Jobs() {
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId, setUserName, setUserJobStatuses } = useAuth();
+  const handleSidebar = () => {
+    setSidebarOpen((prev: boolean) => !prev);
+  };
 
   // Fetch user data effect
   useEffect(() => {
@@ -107,7 +111,8 @@ export default function Jobs() {
 
   return (
     <>
-      <Navbar />
+      <Navbar onMenuOpen={handleSidebar} />
+      <AnimatePresence>{sidebarOpen && <Sidebar />}</AnimatePresence>
       <main>
         <div className="container text-center p-4 mx-auto">
           {loading && (
