@@ -42,6 +42,9 @@ export default function Jobs() {
     setSidebarOpen((prev: boolean) => !prev);
   };
 
+  const handleSidebarOutsideClick = () => {
+    setSidebarOpen(false);
+  };
   // Fetch user data effect
   useEffect(() => {
     const fetchUserData = async () => {
@@ -112,63 +115,69 @@ export default function Jobs() {
   return (
     <>
       <Navbar onMenuOpen={handleSidebar} />
-      <AnimatePresence>{sidebarOpen && <Sidebar />}</AnimatePresence>
-      <main>
-        <div className="container text-center p-4 mx-auto">
-          {loading && (
-            <h1 className="font-semibold text-whitish text-2xl">Loading...</h1>
-          )}
-          {!loading && userJobs.length === 0 && (
-            <>
-              <div className="noJobIcon max-w-[250px] mx-auto mb-2 flex justify-center">
-                <NoJobIcon />
-              </div>
-              <h1 className="text-whitish font-semibold text-2xl">
-                It seems like you haven’t added a job yet
-              </h1>
-              <p className="text-white/40 font-medium">
-                Click on the plus icon to add a job
-              </p>
-            </>
-          )}
-          {!loading && userJobs.length > 0 && (
-            <>
-              <h3 className="text-2xl md:text-4xl mb-4 md:mb-6 font-semibold text-whitish">
-                Here is your added jobs
-              </h3>
-              <div className="jobs sm:px-[25px] md:px-[50px] lg:px-[75px] place-items-center grid gap-4">
-                {userJobs.map((job, index) => (
-                  <JobItem
-                    index={index}
-                    jobId={job.id}
-                    jobTitle={job.title}
-                    companyName={job.company}
-                    jobUrl={job.joburl}
-                    onSelect={() => {
-                      setClickedJobIndex(index);
-                      const prevJobDetails = {
-                        title: userJobs[index].title,
-                        jobUrl: userJobs[index].joburl,
-                        company: userJobs[index].company,
-                        status: userJobs[index].status,
-                        description: userJobs[index].description,
-                        date: userJobs[index].date,
-                        notes: userJobs[index]?.notes || "",
-                      };
-                      setPreviousJobDetails(prevJobDetails);
-                      setNewJobDetails(prevJobDetails);
-                    }}
-                    onDeleteButtonSelect={() => {
-                      setDeleteJobId(userJobs[index]?.id);
-                    }}
-                    key={index}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </main>
+      <AnimatePresence>
+        {sidebarOpen && <Sidebar onOutsideClick={handleSidebarOutsideClick} />}
+      </AnimatePresence>
+      <div
+        className={`main__overlay transition-all duration-300 ${
+          sidebarOpen ? "bg-black/30 z-10" : "-z-10"
+        } fixed top-0 w-full h-screen`}
+      />
+      <div className="container relative text-center p-4 mx-auto">
+        {loading && (
+          <h1 className="font-semibold text-whitish text-2xl">Loading...</h1>
+        )}
+        {!loading && userJobs.length === 0 && (
+          <>
+            <div className="noJobIcon max-w-[250px] mx-auto mb-2 flex justify-center">
+              <NoJobIcon />
+            </div>
+            <h1 className="text-whitish font-semibold text-2xl">
+              It seems like you haven’t added a job yet
+            </h1>
+            <p className="text-white/40 font-medium">
+              Click on the plus icon to add a job
+            </p>
+          </>
+        )}
+        {!loading && userJobs.length > 0 && (
+          <>
+            <h3 className="text-2xl md:text-4xl mb-4 md:mb-6 font-semibold text-whitish">
+              Here is your added jobs
+            </h3>
+            <div className="jobs sm:px-[25px] md:px-[50px] lg:px-[75px] place-items-center grid gap-4">
+              {userJobs.map((job, index) => (
+                <JobItem
+                  index={index}
+                  jobId={job.id}
+                  jobTitle={job.title}
+                  companyName={job.company}
+                  jobUrl={job.joburl}
+                  onSelect={() => {
+                    setClickedJobIndex(index);
+                    const prevJobDetails = {
+                      title: userJobs[index].title,
+                      jobUrl: userJobs[index].joburl,
+                      company: userJobs[index].company,
+                      status: userJobs[index].status,
+                      description: userJobs[index].description,
+                      date: userJobs[index].date,
+                      notes: userJobs[index]?.notes || "",
+                    };
+                    setPreviousJobDetails(prevJobDetails);
+                    setNewJobDetails(prevJobDetails);
+                  }}
+                  onDeleteButtonSelect={() => {
+                    setDeleteJobId(userJobs[index]?.id);
+                  }}
+                  key={index}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <main></main>
       <JobItemModalPortal
         jobId={userJobs[clickedJobIndex || 0]?.id}
         isActive={clickedJobIndex !== null}

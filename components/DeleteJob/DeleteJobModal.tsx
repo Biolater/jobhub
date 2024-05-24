@@ -120,7 +120,7 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="deleteJobModal__layer z-10 fixed top-0 right-0 bottom-0 left-0 h-screen flex items-center justify-center w-full bg-black/50"
+      className="deleteJobModal__layer z-[9999] fixed top-0 right-0 bottom-0 left-0 h-screen flex items-center justify-center w-full bg-black/50"
     >
       <div ref={jobModalInnerRef} className="deleteJobModal__inner sm:w-max sm:rounded-lg w-full bg-primary">
         <header className="deleteJobModal__header text-whitish border-b border-white/20 flex items-center justify-between p-4">

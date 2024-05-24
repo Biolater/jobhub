@@ -58,7 +58,10 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
             delay={0}
             closeDelay={0}
           >
-            <button onClick={onMenuOpen} className="navbar__hamburgerBtn  z-[60] transition-all duration-200 active:bg-white/20 size-12 items-center justify-center rounded-full hover:bg-white/10 flex flex-col gap-1">
+            <button
+              onClick={onMenuOpen}
+              className="navbar__hamburgerBtn  z-[51] transition-all duration-200 active:bg-white/20 size-12 items-center justify-center rounded-full hover:bg-white/10 flex flex-col gap-1"
+            >
               <span className="bg-whitish h-[3px] w-5"></span>
               <span className="bg-whitish h-[3px] w-5"></span>
               <span className="bg-whitish h-[3px] w-5"></span>
