@@ -1,5 +1,6 @@
-import { FC, MouseEventHandler, useRef, useEffect } from "react";
+import { FC, MouseEventHandler, useRef, useEffect, useState } from "react";
 import SidebarItem from "./SidebarItem";
+import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";
 import {
   SearchIcon,
@@ -7,21 +8,38 @@ import {
   DashboardIcon,
   SettingsIcon,
   LogoutIcon,
+  ThreeDotsIcon,
 } from "../Icons";
+import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
+import toast from "react-hot-toast";
 const sidebarContentVariants = {
   initial: {
     width: 0,
   },
   animate: {
-    width: 300,
+    width: 320,
   },
   exit: {
     width: 0,
   },
 };
 
+const sidebarInnerVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+  },
+  exit: {
+    opacity: 0,
+  },
+};
+
 const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const topSidebarItems = [
     {
       text: "Search through your jobs",
@@ -46,6 +64,17 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
       icon: <LogoutIcon />,
     },
   ];
+  const handleSignOut = (text: string) => {
+    if (text === "Logout") {
+      toast.promise(signOut(), {
+        loading: "Logging out...",
+        success: "Logged out successfully",
+        error: "Error logging out",
+      });
+    } else {
+      onOutsideClick();
+    }
+  };
   const handleOutsideClick: MouseEventHandler = (event) => {
     if (
       sidebarRef.current &&
@@ -66,6 +95,7 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  const { userName, email } = useAuth();
   return (
     <motion.div
       onClick={handleOutsideClick}
@@ -77,11 +107,59 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="sidebar__content h-full bg-zephyr"
+        className="sidebar__content px-4 pb-4 pt-16 h-full bg-zephyr"
       >
-        <div className="sidebar__top">
-          
-        </div>
+        <motion.div
+          variants={sidebarInnerVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="sidebar__inner h-full flex flex-col justify-between"
+        >
+          <div className="sidebar__top">
+            <Link href="/my-profile">
+              <div className="userProfile cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
+                <div className="userProfile__left flex items-center gap-2">
+                  <div className="userProfile__pic size-[40px]">
+                    <div className="w-full h-full rounded-full bg-black"></div>
+                  </div>
+                  <div className="userProfile__details flex flex-col">
+                    <p className="userProfile__name text-lg text-whitish font-semibold">
+                      {userName}
+                    </p>
+                    <p className="userProfile__email text-sm text-whitish/50">
+                      {email}
+                    </p>
+                  </div>
+                </div>
+                <div className="userProfile__dots">
+                  <ThreeDotsIcon />
+                </div>
+              </div>
+            </Link>
+            <div className="sidebar__items flex flex-col gap-2">
+              {topSidebarItems.map((item, index) => (
+                <SidebarItem
+                  key={index}
+                  text={item.text}
+                  icon={item.icon}
+                  isActive={activeIndex === index}
+                  onClick={() => setActiveIndex(index)}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="sidebar__bottom flex flex-col gap-2">
+            {bottomSidebarItems.map((item, index) => (
+              <SidebarItem
+                onClick={() => handleSignOut(item.text)}
+                key={index}
+                text={item.text}
+                icon={item.icon}
+              />
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

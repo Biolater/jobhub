@@ -8,6 +8,7 @@ import SearchIcon from "./SearchIcon";
 import SettingsIcon from "./SettingsIcon";
 import DashboardIcon from "./DashboardIcon";
 import BrowseJobsIcon from "./BrowseJobsIcon";
+import ThreeDotsIcon from "./ThreeDotsIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -19,4 +20,5 @@ export {
   SettingsIcon,
   DashboardIcon,
   BrowseJobsIcon,
+  ThreeDotsIcon,
 };

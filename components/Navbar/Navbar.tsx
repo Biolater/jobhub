@@ -50,7 +50,7 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
   return (
     <header>
       <nav className="navbar">
-        <div className="container relative px-4 py-4 mx-auto flex items-center justify-between">
+        <div className="container relative px-4 py-2 mx-auto flex items-center justify-between">
           <Tooltip
             className="bg-[#3C4043] text-sm px-2 py-1 rounded-sm text-whitish"
             placement="bottom"
