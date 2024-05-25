@@ -40,7 +40,7 @@ export default function AuthContextProvider({
         action(true);
         setIsLoggedIn(true);
         setUserId(payload.data.username);
-        router.push("/jobs");
+        router.push("/home-page");
         break;
       case "signedOut":
         action(false);
