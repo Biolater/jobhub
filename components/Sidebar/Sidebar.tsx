@@ -13,31 +13,8 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import toast from "react-hot-toast";
-const sidebarContentVariants = {
-  initial: {
-    width: 0,
-  },
-  animate: {
-    width: 320,
-  },
-  exit: {
-    width: 0,
-  },
-};
 
-const sidebarInnerVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-};
-
-const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
+const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOutsideClick, onHide }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const topSidebarItems = [
@@ -64,6 +41,29 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
       icon: <LogoutIcon />,
     },
   ];
+  const sidebarInnerVariants = {
+    initial: {
+      opacity: 0,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
+  };
+
+  const sidebarContentVariants = {
+    initial: {
+      width: 0,
+    },
+    animate: {
+      width: 320,
+    },
+    exit: {
+      width: 0,
+    },
+  };
   const handleSignOut = (text: string) => {
     if (text === "Logout") {
       toast.promise(signOut(), {
@@ -95,12 +95,22 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 640) {
+        onHide();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [window.innerWidth]);
+  
   const { userName, email } = useAuth();
   return (
     <motion.div
       data-testid="sidebar"
       onClick={handleOutsideClick}
-      className="sidebar__overlay z-50 h-screen fixed top-0 left-0 bottom-0 w-full"
+      className="sidebar__overlay sm:hidden z-50 h-screen fixed top-0 left-0 bottom-0 w-full"
     >
       <motion.div
         ref={sidebarRef}
@@ -119,12 +129,12 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
         >
           <div className="sidebar__top">
             <Link href="/my-profile">
-              <div className="userProfile cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
+              <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
                 <div className="userProfile__left flex items-center gap-2">
                   <div className="userProfile__pic size-[40px]">
                     <div className="w-full h-full rounded-full bg-black"></div>
                   </div>
-                  <div className="userProfile__details flex flex-col">
+                  <div className="userProfile__details sm:hidden flex flex-col">
                     <p className="userProfile__name text-lg text-whitish font-semibold">
                       {userName}
                     </p>
@@ -133,7 +143,7 @@ const Sidebar: FC<{ onOutsideClick: () => void }> = ({ onOutsideClick }) => {
                     </p>
                   </div>
                 </div>
-                <div className="userProfile__dots">
+                <div className="userProfile__dots sm:hidden">
                   <ThreeDotsIcon />
                 </div>
               </div>

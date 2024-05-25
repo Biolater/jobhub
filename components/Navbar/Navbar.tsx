@@ -8,6 +8,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { AddJobModalPortal, ProfilePopUp } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 /**
  * The Navbar component
  * @param {Object} props - Component props
@@ -48,11 +49,11 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
   };
 
   return (
-    <header data-testid="navbar">
+    <header className="navbar__header" data-testid="navbar">
       <nav className="navbar">
-        <div className="container relative px-4 py-2 mx-auto flex items-center justify-between">
+        <div className="container relative px-4 py-2 sm:py-3.5 mx-auto flex items-center justify-between">
           <Tooltip
-            className="bg-[#3C4043] text-sm px-2 py-1 rounded-sm text-whitish"
+            className="bg-[#3C4043] sm:hidden text-sm px-2 py-1 rounded-sm text-whitish"
             placement="bottom"
             content="Menu"
             delay={0}
@@ -61,13 +62,16 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
             <button
               data-testid="navbar__hamburgerBtn"
               onClick={onMenuOpen}
-              className="navbar__hamburgerBtn  z-[51] transition-all duration-200 active:bg-white/20 size-12 items-center justify-center rounded-full hover:bg-white/10 flex flex-col gap-1"
+              className="navbar__hamburgerBtn sm:hidden  z-[51] transition-all duration-200 active:bg-white/20 size-12 items-center justify-center rounded-full hover:bg-white/10 flex flex-col gap-1"
             >
               <span className="bg-whitish h-[3px] w-5"></span>
               <span className="bg-whitish h-[3px] w-5"></span>
               <span className="bg-whitish h-[3px] w-5"></span>
             </button>
           </Tooltip>
+          <Link href="/home-page" className="navbar__logo hidden sm:block">
+            <p className="text-whitish font-semibold text-2xl">Jobhub</p>
+          </Link>
           <div className="navbar__actions relative gap-4 flex items-center justify-center">
             <Tooltip
               className="bg-[#3C4043] text-sm px-2 py-1 rounded-sm text-whitish"

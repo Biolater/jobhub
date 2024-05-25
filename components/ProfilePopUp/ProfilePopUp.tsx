@@ -5,6 +5,7 @@ import { UserCircleIcon, LogoutIcon } from "../Icons";
 import ProfileActionButton from "./ProfileActionButton";
 import { signOut } from "aws-amplify/auth";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 const profilePopUpVariants = {
   inital: {
@@ -33,17 +34,6 @@ type profileActionsItem = {
   text: string;
 };
 
-const profileActions: profileActionsItem[] = [
-  {
-    icon: <UserCircleIcon />,
-    text: "View Profile",
-  },
-  {
-    icon: <LogoutIcon />,
-    text: "Logout",
-  },
-];
-
 /**
  * Signs out the user
  */
@@ -59,16 +49,11 @@ const handleSignOut = async () => {
   }
 };
 
-const handleProfileActionClick = (text: string) => {
-  if (text === "Logout") {
-    handleSignOut();
-  }
-};
-
 const ProfilePopUp: FC<{
   handleOutsideClickPopUp: (event: MouseEvent) => void;
 }> = ({ handleOutsideClickPopUp }) => {
   const { email, userName, userJobStatuses } = useAuth();
+  const router = useRouter();
   const badgeItems: badgeItem[] = [
     {
       bgColor: "bg-gray-700",
@@ -105,6 +90,23 @@ const ProfilePopUp: FC<{
       content: "Rejected",
       contentValue: userJobStatuses?.filter((status) => status === "Rejected")
         .length,
+    },
+  ];
+  const handleProfileActionClick = (text: string) => {
+    if (text === "Logout") {
+      handleSignOut();
+    } else if (text === "View Profile") {
+      router.push(`/my-profile`);
+    }
+  };
+  const profileActions: profileActionsItem[] = [
+    {
+      icon: <UserCircleIcon />,
+      text: "View Profile",
+    },
+    {
+      icon: <LogoutIcon />,
+      text: "Logout",
     },
   ];
   const profilePopUpRef = useRef<HTMLDivElement>(null);
