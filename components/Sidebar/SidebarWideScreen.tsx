@@ -1,7 +1,10 @@
-import { FC, MouseEventHandler, useRef, useEffect, useState } from "react";
-import SidebarItem from "./SidebarItem";
+import { FC, useRef, useState } from "react";
 import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";
+import { Tooltip } from "@nextui-org/tooltip";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import { useRouter, usePathname } from "next/navigation";
 import {
   SearchIcon,
   BrowseJobsIcon,
@@ -11,85 +14,96 @@ import {
   ThreeDotsIcon,
 } from "../Icons";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import toast from "react-hot-toast";
+import SidebarItem from "./SidebarItem";
 
-const SidebarWideScreen: FC = () => {
+const TOP_SIDEBAR_ITEMS: {
+  text: string;
+  icon: JSX.Element;
+  testId?: string;
+  onClick: (router: ReturnType<typeof useRouter>) => void;
+}[] = [
+  {
+    text: "Search through your jobs",
+    icon: <SearchIcon />,
+    testId: "sidebarWideScreen__searchButton",
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page"),
+  },
+  {
+    text: "Applications Dashboard",
+    icon: <DashboardIcon />,
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page/dashboard"),
+  },
+  {
+    text: "Browse Job Board",
+    icon: <BrowseJobsIcon />,
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page/job-board"),
+  },
+];
+
+const BOTTOM_SIDEBAR_ITEMS = [
+  {
+    text: "Settings",
+    icon: <SettingsIcon />,
+  },
+  {
+    text: "Logout",
+    icon: <LogoutIcon />,
+  },
+];
+
+const SIDEBAR_INNER_VARIANTS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const SIDEBAR_CONTENT_VARIANTS = {
+  initial: { width: 0 },
+  animate: { width: 88 },
+  exit: { width: 0 },
+};
+
+const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
+  onSearchButtonClick,
+}) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const topSidebarItems = [
-    {
-      text: "Search through your jobs",
-      icon: <SearchIcon />,
-    },
-    {
-      text: "Applications Dashboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      text: "Browse Job Board",
-      icon: <BrowseJobsIcon />,
-    },
-  ];
-  const bottomSidebarItems = [
-    {
-      text: "Settings",
-      icon: <SettingsIcon />,
-    },
-    {
-      text: "Logout",
-      icon: <LogoutIcon />,
-    },
-  ];
-  const sidebarInnerVariants = {
-    initial: {
-      opacity: 0,
-    },
-    animate: {
-      opacity: 1,
-    },
-    exit: {
-      opacity: 0,
-    },
-  };
+  const { userName, email } = useAuth();
 
-
-
-  const sidebarContentVariants = {
-    initial: {
-      width: 0,
-    },
-    animate: {
-      width: 88
-    },
-    exit: {
-      width: 0,
-    },
-  };
-  const handleSignOut = (text: string) => {
+  const handleSignOut = async (text: string) => {
     if (text === "Logout") {
-      toast.promise(signOut(), {
-        loading: "Logging out...",
-        success: "Logged out successfully",
-        error: "Error logging out",
-      });
-    } else {
+      try {
+        await toast.promise(signOut(), {
+          loading: "Logging out...",
+          success: "Logged out successfully",
+          error: "Error logging out",
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
-  // useEffect(() => {
-  //   // const handleResize = () => {
-  //   //   setSidebarWidth(window.innerWidth > 640 ? 80 : 320);
-  //   // };
-  //   // window.addEventListener("resize", handleResize);
-  //   // return () => window.removeEventListener("resize", handleResize);
-  // }, [window.innerWidth]);
+  const handleTopSidebarItemClick = (index: number) => {
+    setActiveIndex(index);
+    const item = TOP_SIDEBAR_ITEMS[index];
+    if (item.text === "Search through your jobs") {
+      onSearchButtonClick();
+      item.onClick(router);
+    } else {
+      item.onClick(router);
+    }
+  };
 
-  const { userName, email } = useAuth();
   return (
     <motion.div
       ref={sidebarRef}
-      variants={sidebarContentVariants}
+      variants={SIDEBAR_CONTENT_VARIANTS}
       data-testid="sidebarWideScreen"
       initial="initial"
       animate="animate"
@@ -97,7 +111,7 @@ const SidebarWideScreen: FC = () => {
       className="sidebar__content h-screen p-4 bg-zephyr"
     >
       <motion.div
-        variants={sidebarInnerVariants}
+        variants={SIDEBAR_INNER_VARIANTS}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -125,24 +139,29 @@ const SidebarWideScreen: FC = () => {
             </div>
           </Link>
           <div className="sidebar__items flex flex-col gap-2">
-            {topSidebarItems.map((item, index) => (
+            {TOP_SIDEBAR_ITEMS.map((item, index) => (
               <SidebarItem
                 key={index}
+                data-testid={item?.testId}
                 text={item.text}
                 icon={item.icon}
-                isActive={activeIndex === index}
-                onClick={() => setActiveIndex(index)}
+                isActive={
+                  activeIndex === index ||
+                  (pathname === "/home-page/dashboard" && index === 1) ||
+                  (pathname === "/home-page/job-board" && index === 2)
+                }
+                onClick={() => handleTopSidebarItemClick(index)}
               />
             ))}
           </div>
         </motion.div>
         <div className="sidebar__bottom flex flex-col gap-2">
-          {bottomSidebarItems.map((item, index) => (
+          {BOTTOM_SIDEBAR_ITEMS.map((item, index) => (
             <SidebarItem
-              onClick={() => handleSignOut(item.text)}
               key={index}
               text={item.text}
               icon={item.icon}
+              onClick={() => handleSignOut(item.text)}
             />
           ))}
         </div>

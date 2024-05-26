@@ -1,11 +1,16 @@
 "use client";
 import { FC, useState, useEffect } from "react";
-import { Navbar, Sidebar, SidebarWideScreen } from "@/components/index";
+import {
+  Navbar,
+  Sidebar,
+  SidebarWideScreen,
+  SidebarSearchBar,
+} from "@/components/index";
 import { AnimatePresence } from "framer-motion";
 const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarWideScreen, setSidebarWideScreen] = useState(false);
-
+  const [searchbarActive, setSearchbarActive] = useState(false);
   const handleSidebarOutsideClick = () => {
     setSidebarOpen(false);
   };
@@ -18,12 +23,23 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     setSidebarWideScreen(true);
   };
 
+  const onSidebarWideScreenSearch = () => {
+    setSidebarOpen(false);
+    setSidebarWideScreen(false);
+    setSearchbarActive(true);
+  };
+
+  const onSidebarSearchBar = () => {
+    setSearchbarActive(true);
+    setSidebarOpen(false);
+  };
+
   useEffect(() => {
     setSidebarWideScreen(window.innerWidth > 640);
     const handleResize = () => {
       if (window.innerWidth > 640) {
         setSidebarWideScreen(true);
-      }else{
+      } else {
         setSidebarWideScreen(false);
       }
     };
@@ -36,8 +52,12 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <AnimatePresence>
+        {searchbarActive && <SidebarSearchBar />}
+      </AnimatePresence>
+      <AnimatePresence>
         {sidebarOpen && (
           <Sidebar
+            onSearchBar={onSidebarSearchBar}
             onHide={onSidebarWideScreen}
             onOutsideClick={handleSidebarOutsideClick}
           />
@@ -45,7 +65,11 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
       </AnimatePresence>
       <div className="flex">
         <AnimatePresence>
-          {sidebarWideScreen && <SidebarWideScreen />}
+          {sidebarWideScreen && (
+            <SidebarWideScreen
+              onSearchButtonClick={onSidebarWideScreenSearch}
+            />
+          )}
         </AnimatePresence>
         <div className="flex flex-grow flex-col">
           <Navbar onMenuOpen={handleSidebar} />

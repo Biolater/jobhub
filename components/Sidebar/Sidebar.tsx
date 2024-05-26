@@ -1,7 +1,9 @@
 import { FC, MouseEventHandler, useRef, useEffect, useState } from "react";
-import SidebarItem from "./SidebarItem";
 import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import { usePathname, useRouter } from "next/navigation";
 import {
   SearchIcon,
   BrowseJobsIcon,
@@ -11,59 +13,60 @@ import {
   ThreeDotsIcon,
 } from "../Icons";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import toast from "react-hot-toast";
+import SidebarItem from "./SidebarItem";
 
-const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOutsideClick, onHide }) => {
+const TOP_SIDEBAR_ITEMS = (router: ReturnType<typeof useRouter>) => [
+  {
+    text: "Search through your jobs",
+    icon: <SearchIcon />,
+    onClick: () => router.push("/home-page"),
+  },
+  {
+    text: "Applications Dashboard",
+    icon: <DashboardIcon />,
+    onClick: () => router.push("/home-page/dashboard"),
+  },
+  {
+    text: "Browse Job Board",
+    icon: <BrowseJobsIcon />,
+    onClick: () => router.push("/home-page/job-board"),
+  },
+];
+
+const BOTTOM_SIDEBAR_ITEMS = [
+  {
+    text: "Settings",
+    icon: <SettingsIcon />,
+  },
+  {
+    text: "Logout",
+    icon: <LogoutIcon />,
+  },
+];
+
+const SIDEBAR_INNER_VARIANTS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const SIDEBAR_CONTENT_VARIANTS = {
+  initial: { width: 0 },
+  animate: { width: 320 },
+  exit: { width: 0 },
+};
+
+const Sidebar: FC<{
+  onOutsideClick: () => void;
+  onHide: () => void;
+  onSearchBar: () => void;
+}> = ({ onOutsideClick, onHide, onSearchBar }) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const topSidebarItems = [
-    {
-      text: "Search through your jobs",
-      icon: <SearchIcon />,
-    },
-    {
-      text: "Applications Dashboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      text: "Browse Job Board",
-      icon: <BrowseJobsIcon />,
-    },
-  ];
-  const bottomSidebarItems = [
-    {
-      text: "Settings",
-      icon: <SettingsIcon />,
-    },
-    {
-      text: "Logout",
-      icon: <LogoutIcon />,
-    },
-  ];
-  const sidebarInnerVariants = {
-    initial: {
-      opacity: 0,
-    },
-    animate: {
-      opacity: 1,
-    },
-    exit: {
-      opacity: 0,
-    },
-  };
+  const { userName, email } = useAuth();
 
-  const sidebarContentVariants = {
-    initial: {
-      width: 0,
-    },
-    animate: {
-      width: 320,
-    },
-    exit: {
-      width: 0,
-    },
-  };
   const handleSignOut = (text: string) => {
     if (text === "Logout") {
       toast.promise(signOut(), {
@@ -75,6 +78,7 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
       onOutsideClick();
     }
   };
+
   const handleOutsideClick: MouseEventHandler = (event) => {
     if (
       sidebarRef.current &&
@@ -84,6 +88,19 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
       onOutsideClick();
     }
   };
+
+  const handleTopSidebarItemClick = (index: number) => {
+    setActiveIndex(index);
+    onOutsideClick();
+    const item = TOP_SIDEBAR_ITEMS(router)[index];
+    if (item.text === "Search through your jobs") {
+      item.onClick();
+      onSearchBar();
+    } else if (item.onClick) {
+      item.onClick();
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -94,7 +111,8 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [onOutsideClick]);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 640) {
@@ -103,9 +121,8 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [window.innerWidth]);
-  
-  const { userName, email } = useAuth();
+  }, [onHide]);
+
   return (
     <motion.div
       data-testid="sidebar"
@@ -114,14 +131,14 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
     >
       <motion.div
         ref={sidebarRef}
-        variants={sidebarContentVariants}
+        variants={SIDEBAR_CONTENT_VARIANTS}
         initial="initial"
         animate="animate"
         exit="exit"
         className="sidebar__content px-4 pb-4 pt-16 h-full bg-zephyr"
       >
         <motion.div
-          variants={sidebarInnerVariants}
+          variants={SIDEBAR_INNER_VARIANTS}
           initial="initial"
           animate="animate"
           exit="exit"
@@ -149,19 +166,23 @@ const Sidebar: FC<{ onOutsideClick: () => void, onHide: () => void }> = ({ onOut
               </div>
             </Link>
             <div className="sidebar__items flex flex-col gap-2">
-              {topSidebarItems.map((item, index) => (
+              {TOP_SIDEBAR_ITEMS(router).map((item, index) => (
                 <SidebarItem
                   key={index}
                   text={item.text}
                   icon={item.icon}
-                  isActive={activeIndex === index}
-                  onClick={() => setActiveIndex(index)}
+                  isActive={
+                    activeIndex === index ||
+                    (pathname === "/home-page/dashboard" && index === 1) ||
+                    (pathname === "/home-page/job-board" && index === 2)
+                  }
+                  onClick={() => handleTopSidebarItemClick(index)}
                 />
               ))}
             </div>
           </div>
           <div className="sidebar__bottom flex flex-col gap-2">
-            {bottomSidebarItems.map((item, index) => (
+            {BOTTOM_SIDEBAR_ITEMS.map((item, index) => (
               <SidebarItem
                 onClick={() => handleSignOut(item.text)}
                 key={index}

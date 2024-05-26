@@ -2,14 +2,15 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HomePageLayout from "@/app/home-page/layout";
 import { describe } from "node:test";
-
-const resizeWindow = (width: number, height: number) => {
-  window.innerWidth = width;
-  window.innerHeight = height;
-  window.dispatchEvent(new Event("resize"));
-};
+import resizeWindow from "@/lib/resizeWindow";
 
 describe("HomePageLayout", () => {
+  jest.mock('next/navigation', () => ({
+    useRouter: () => ({
+      // Define mock functionalities you need for testing, e.g.,
+      push: jest.fn(),
+    }),
+  }));
   it("should render navbar and sidebar", () => {
     render(
       <HomePageLayout>

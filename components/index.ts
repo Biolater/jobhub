@@ -8,6 +8,7 @@ import DeleteJobModalPortal from "./DeleteJob/DeleteJobModalPortal";
 import ProfilePopUp from "./ProfilePopUp/ProfilePopUp";
 import Sidebar from "./Sidebar/Sidebar";
 import SidebarWideScreen from "./Sidebar/SidebarWideScreen";
+import SidebarSearchBar from "./SidebarSearchBar/SidebarSearchBar";
 export {
   Navbar,
   AddJobModal,
@@ -19,4 +20,5 @@ export {
   ProfilePopUp,
   Sidebar,
   SidebarWideScreen,
+  SidebarSearchBar,
 };

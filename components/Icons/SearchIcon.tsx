@@ -3,6 +3,7 @@ const SearchIcon = () => {
     <svg
       width="29"
       height="29"
+      className="w-full h-full"
       viewBox="0 0 29 29"
       xmlns="http://www.w3.org/2000/svg"
     >
