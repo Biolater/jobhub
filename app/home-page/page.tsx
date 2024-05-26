@@ -106,7 +106,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="container relative text-center p-4 mx-auto">
+      <div className="relative text-center p-4 mx-auto">
         {loading && (
           <h1 className="font-semibold text-whitish text-2xl">Loading...</h1>
         )}

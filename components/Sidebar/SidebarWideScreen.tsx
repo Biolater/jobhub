@@ -17,7 +17,6 @@ import toast from "react-hot-toast";
 const SidebarWideScreen: FC = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [sidebarWidened, setSidebarWidened] = useState(false);
   const topSidebarItems = [
     {
       text: "Search through your jobs",
@@ -54,12 +53,14 @@ const SidebarWideScreen: FC = () => {
     },
   };
 
+
+
   const sidebarContentVariants = {
     initial: {
       width: 0,
     },
     animate: {
-      width: sidebarWidened ? 200 : "max-content",
+      width: 88
     },
     exit: {
       width: 0,
@@ -76,19 +77,20 @@ const SidebarWideScreen: FC = () => {
     }
   };
 
-  useEffect(() => {
-    // const handleResize = () => {
-    //   setSidebarWidth(window.innerWidth > 640 ? 80 : 320);
-    // };
-    // window.addEventListener("resize", handleResize);
-    // return () => window.removeEventListener("resize", handleResize);
-  }, [window.innerWidth]);
+  // useEffect(() => {
+  //   // const handleResize = () => {
+  //   //   setSidebarWidth(window.innerWidth > 640 ? 80 : 320);
+  //   // };
+  //   // window.addEventListener("resize", handleResize);
+  //   // return () => window.removeEventListener("resize", handleResize);
+  // }, [window.innerWidth]);
 
   const { userName, email } = useAuth();
   return (
     <motion.div
       ref={sidebarRef}
       variants={sidebarContentVariants}
+      data-testid="sidebarWideScreen"
       initial="initial"
       animate="animate"
       exit="exit"
@@ -101,12 +103,7 @@ const SidebarWideScreen: FC = () => {
         exit="exit"
         className="sidebar__inner h-full flex flex-col justify-between"
       >
-        <div className="sidebar__top">
-          <button className="navbar__hamburgerBtn transition-all duration-200 active:bg-white/20 items-center justify-center w-full py-6 px-2 rounded-lg hover:bg-white/10 flex flex-col gap-1">
-            <span className="bg-whitish h-[3px] w-5"></span>
-            <span className="bg-whitish h-[3px] w-5"></span>
-            <span className="bg-whitish h-[3px] w-5"></span>
-          </button>
+        <motion.div layout className="sidebar__top">
           <Link href="/my-profile">
             <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
               <div className="userProfile__left flex items-center gap-2">
@@ -135,11 +132,10 @@ const SidebarWideScreen: FC = () => {
                 icon={item.icon}
                 isActive={activeIndex === index}
                 onClick={() => setActiveIndex(index)}
-                hideTexts={!sidebarWidened}
               />
             ))}
           </div>
-        </div>
+        </motion.div>
         <div className="sidebar__bottom flex flex-col gap-2">
           {bottomSidebarItems.map((item, index) => (
             <SidebarItem
@@ -147,7 +143,6 @@ const SidebarWideScreen: FC = () => {
               key={index}
               text={item.text}
               icon={item.icon}
-              hideTexts={!sidebarWidened}
             />
           ))}
         </div>

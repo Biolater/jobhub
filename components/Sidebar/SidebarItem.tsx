@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { motion } from "framer-motion";
 const SidebarItem: FC<{
   isActive?: boolean;
   text: string;
@@ -14,7 +15,7 @@ const SidebarItem: FC<{
       } transition-all duration-300 ease-out text-whitish flex items-center gap-2`}
     >
       <div className="sidebarItem__icon size-[29px]">{icon}</div>
-      <p className={`sidebarItem__text ${hideTexts && "sm:hidden"}`}>{text}</p>
+      <motion.p className={`sidebarItem__text sm:hidden`}>{text}</motion.p>
     </button>
   );
 };
