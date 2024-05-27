@@ -12,6 +12,7 @@ const schema = a.schema({
       id: a.id().required(),
       username: a.string().required(),
       email: a.string().required(),
+      bio: a.string(),
       profilePic: a.url(),
       jobs: a.hasMany("Job", "userId"),
     })
