@@ -27,13 +27,24 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     setSidebarOpen(false);
     setSidebarWideScreen(false);
     setTimeout(() => {
-      setSearchbarActive(true)
+      setSearchbarActive(true);
     }, 150);
   };
 
   const onSidebarSearchBar = () => {
     setSearchbarActive(true);
     setSidebarOpen(false);
+  };
+
+  const searchBarOutsideWideScreen = () => {
+    setSearchbarActive(false);
+    setTimeout(() => {
+      setSidebarWideScreen(true);
+    }, 150);
+  };
+
+  const searchbarOutsideClick = () => {
+    setSearchbarActive(false);
   };
 
   useEffect(() => {
@@ -54,7 +65,12 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <AnimatePresence>
-        {searchbarActive && <SidebarSearchBar />}
+        {searchbarActive && (
+          <SidebarSearchBar
+            onOutsideClick={searchbarOutsideClick}
+            onOutsideClickWide={searchBarOutsideWideScreen}
+          />
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {sidebarOpen && (

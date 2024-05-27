@@ -54,7 +54,7 @@ const BOTTOM_SIDEBAR_ITEMS = [
 ];
 
 const SIDEBAR_INNER_VARIANTS = {
-  initial: { opacity: 0 },
+  initial: { opacity: 0},
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
@@ -93,7 +93,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
     const item = TOP_SIDEBAR_ITEMS[index];
     if (item.text === "Search through your jobs") {
       item.onClick(router);
-        onSearchButtonClick()
+      onSearchButtonClick()
     } else {
       item.onClick(router);
     }
@@ -107,14 +107,14 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
       initial="initial"
       animate="animate"
       exit="exit"
-      className="sidebar__content min-h-screen p-4 bg-zephyr"
+      className="sidebar__content min-h-screen bg-zephyr"
     >
       <motion.div
         variants={SIDEBAR_INNER_VARIANTS}
         initial="initial"
         animate="animate"
         exit="exit"
-        className="sidebar__inner h-full flex flex-col justify-between"
+        className="sidebar__inner p-4 h-full flex flex-col justify-between"
       >
         <motion.div layout className="sidebar__top">
           <Link href="/my-profile">

@@ -6,7 +6,7 @@
  *
  * @returns The main page of the application.
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NoJobIcon } from "@/components/Icons";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
@@ -19,10 +19,15 @@ import {
   DeleteJobModalPortal,
 } from "@/components/index";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
+import { useSelector } from "react-redux";
+import { selectSearchbarValue } from "../store/searchbarSlice";
 export default function Home() {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
   const [userJobs, setUserJobs] = useState<JobTypes[]>([]);
+  const [filteredUserJobs, setFilteredUserJobs] = useState<JobTypes[] | null>(
+    []
+  );
   const [clickedJobIndex, setClickedJobIndex] = useState<number | null>(null);
   const {
     setPreviousJobDetails,
@@ -36,8 +41,21 @@ export default function Home() {
   // Amplify client setup
   const client = generateClient<Schema>();
   const { userId, setUserName, setUserJobStatuses } = useAuth();
-
-  // Fetch user data effect
+  const searchbarValue = useSelector(selectSearchbarValue);
+  useEffect(() => {
+    const searchbarValueLowerCase = searchbarValue.toLowerCase();
+    if (searchbarValue) {
+      const filteredJobs = userJobs.filter(
+        (job) =>
+          job.title.toLowerCase().includes(searchbarValueLowerCase) ||
+          job.company.toLowerCase().includes(searchbarValueLowerCase) ||
+          job.description.toLowerCase().includes(searchbarValueLowerCase)
+      );
+      setFilteredUserJobs(filteredJobs);
+    } else {
+      setFilteredUserJobs(null);
+    }
+  }, [searchbarValue]);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -78,7 +96,6 @@ export default function Home() {
     };
     if (userId) fetchUserData();
   }, [userId]);
-
   useEffect(() => {
     const subscription = client.models.Job.observeQuery().subscribe({
       next: ({ items }) => {
@@ -129,33 +146,62 @@ export default function Home() {
               Here is your added jobs
             </h3>
             <div className="jobs sm:px-[25px] md:px-[50px] lg:px-[75px] place-items-center grid gap-4">
-              {userJobs.map((job, index) => (
-                <JobItem
-                  index={index}
-                  jobId={job.id}
-                  jobTitle={job.title}
-                  companyName={job.company}
-                  jobUrl={job.joburl}
-                  onSelect={() => {
-                    setClickedJobIndex(index);
-                    const prevJobDetails = {
-                      title: userJobs[index].title,
-                      jobUrl: userJobs[index].joburl,
-                      company: userJobs[index].company,
-                      status: userJobs[index].status,
-                      description: userJobs[index].description,
-                      date: userJobs[index].date,
-                      notes: userJobs[index]?.notes || "",
-                    };
-                    setPreviousJobDetails(prevJobDetails);
-                    setNewJobDetails(prevJobDetails);
-                  }}
-                  onDeleteButtonSelect={() => {
-                    setDeleteJobId(userJobs[index]?.id);
-                  }}
-                  key={index}
-                />
-              ))}
+              {!filteredUserJobs &&
+                userJobs.map((job, index) => (
+                  <JobItem
+                    index={index}
+                    jobId={job.id}
+                    jobTitle={job.title}
+                    companyName={job.company}
+                    jobUrl={job.joburl}
+                    onSelect={() => {
+                      setClickedJobIndex(index);
+                      const prevJobDetails = {
+                        title: userJobs[index].title,
+                        jobUrl: userJobs[index].joburl,
+                        company: userJobs[index].company,
+                        status: userJobs[index].status,
+                        description: userJobs[index].description,
+                        date: userJobs[index].date,
+                        notes: userJobs[index]?.notes || "",
+                      };
+                      setPreviousJobDetails(prevJobDetails);
+                      setNewJobDetails(prevJobDetails);
+                    }}
+                    onDeleteButtonSelect={() => {
+                      setDeleteJobId(userJobs[index]?.id);
+                    }}
+                    key={index}
+                  />
+                ))}
+              {filteredUserJobs &&
+                filteredUserJobs.map((job, index) => (
+                  <JobItem
+                    index={index}
+                    jobId={job.id}
+                    jobTitle={job.title}
+                    companyName={job.company}
+                    jobUrl={job.joburl}
+                    onSelect={() => {
+                      setClickedJobIndex(index);
+                      const prevJobDetails = {
+                        title: userJobs[index].title,
+                        jobUrl: userJobs[index].joburl,
+                        company: userJobs[index].company,
+                        status: userJobs[index].status,
+                        description: userJobs[index].description,
+                        date: userJobs[index].date,
+                        notes: userJobs[index]?.notes || "",
+                      };
+                      setPreviousJobDetails(prevJobDetails);
+                      setNewJobDetails(prevJobDetails);
+                    }}
+                    onDeleteButtonSelect={() => {
+                      setDeleteJobId(userJobs[index]?.id);
+                    }}
+                    key={index}
+                  />
+                ))}
             </div>
           </>
         )}

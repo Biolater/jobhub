@@ -121,7 +121,7 @@ type ActionButtonsProps = {
 };
 
 const ActionButtons: FC<ActionButtonsProps> = ({ onSelect, jobUrl }) => (
-  <div className="jobItem__buttons flex flex-col sm:flex-row gap-2">
+  <div className="jobItem__buttons flex flex-col md:flex-row gap-2">
     <button
       onClick={onSelect}
       className="viewDetails transition-all duration-200 hover:scale-105 active:scale-90 px-4 py-2 rounded font-semibold text-medium bg-secondary text-whitish"
