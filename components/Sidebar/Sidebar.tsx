@@ -95,7 +95,9 @@ const Sidebar: FC<{
     const item = TOP_SIDEBAR_ITEMS(router)[index];
     if (item.text === "Search through your jobs") {
       item.onClick();
-      onSearchBar();
+      setTimeout(() => {
+        onSearchBar()
+      }, 200)
     } else if (item.onClick) {
       item.onClick();
     }

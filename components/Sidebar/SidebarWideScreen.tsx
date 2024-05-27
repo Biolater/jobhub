@@ -1,7 +1,6 @@
 import { FC, useRef, useState } from "react";
 import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";
-import { Tooltip } from "@nextui-org/tooltip";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter, usePathname } from "next/navigation";
@@ -22,26 +21,26 @@ const TOP_SIDEBAR_ITEMS: {
   testId?: string;
   onClick: (router: ReturnType<typeof useRouter>) => void;
 }[] = [
-  {
-    text: "Search through your jobs",
-    icon: <SearchIcon />,
-    testId: "sidebarWideScreen__searchButton",
-    onClick: (router: ReturnType<typeof useRouter>) =>
-      router.push("/home-page"),
-  },
-  {
-    text: "Applications Dashboard",
-    icon: <DashboardIcon />,
-    onClick: (router: ReturnType<typeof useRouter>) =>
-      router.push("/home-page/dashboard"),
-  },
-  {
-    text: "Browse Job Board",
-    icon: <BrowseJobsIcon />,
-    onClick: (router: ReturnType<typeof useRouter>) =>
-      router.push("/home-page/job-board"),
-  },
-];
+    {
+      text: "Search through your jobs",
+      icon: <SearchIcon />,
+      testId: "sidebarWideScreen__searchButton",
+      onClick: (router: ReturnType<typeof useRouter>) =>
+        router.push("/home-page"),
+    },
+    {
+      text: "Applications Dashboard",
+      icon: <DashboardIcon />,
+      onClick: (router: ReturnType<typeof useRouter>) =>
+        router.push("/home-page/dashboard"),
+    },
+    {
+      text: "Browse Job Board",
+      icon: <BrowseJobsIcon />,
+      onClick: (router: ReturnType<typeof useRouter>) =>
+        router.push("/home-page/job-board"),
+    },
+  ];
 
 const BOTTOM_SIDEBAR_ITEMS = [
   {
@@ -93,8 +92,8 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
     setActiveIndex(index);
     const item = TOP_SIDEBAR_ITEMS[index];
     if (item.text === "Search through your jobs") {
-      onSearchButtonClick();
       item.onClick(router);
+        onSearchButtonClick()
     } else {
       item.onClick(router);
     }
@@ -108,7 +107,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
       initial="initial"
       animate="animate"
       exit="exit"
-      className="sidebar__content h-screen p-4 bg-zephyr"
+      className="sidebar__content min-h-screen p-4 bg-zephyr"
     >
       <motion.div
         variants={SIDEBAR_INNER_VARIANTS}

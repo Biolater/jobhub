@@ -26,7 +26,9 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
   const onSidebarWideScreenSearch = () => {
     setSidebarOpen(false);
     setSidebarWideScreen(false);
-    setSearchbarActive(true);
+    setTimeout(() => {
+      setSearchbarActive(true)
+    }, 150);
   };
 
   const onSidebarSearchBar = () => {
