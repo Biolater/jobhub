@@ -18,8 +18,6 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
   const [jobModalActive, setJobModalActive] = useState<boolean>(false);
   const [profilePopUpActive, setProfilePopUpActive] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
-  
-
   /**
    * Toggles the job modal active state
    */
