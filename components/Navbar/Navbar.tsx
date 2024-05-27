@@ -12,6 +12,7 @@ import Link from "next/link";
 /**
  * The Navbar component
  * @param {Object} props - Component props
+ * 
  * @return {ReactElement} - Component
  */
 const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
