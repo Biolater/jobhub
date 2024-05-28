@@ -9,6 +9,8 @@ import SettingsIcon from "./SettingsIcon";
 import DashboardIcon from "./DashboardIcon";
 import BrowseJobsIcon from "./BrowseJobsIcon";
 import ThreeDotsIcon from "./ThreeDotsIcon";
+import MailIcon from "./MailIcon";
+import BirthdayCakeIcon from "./BirthdayCakeIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -21,4 +23,6 @@ export {
   DashboardIcon,
   BrowseJobsIcon,
   ThreeDotsIcon,
+  MailIcon,
+  BirthdayCakeIcon,
 };

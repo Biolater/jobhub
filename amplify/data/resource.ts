@@ -12,12 +12,12 @@ const schema = a.schema({
       id: a.id().required(),
       username: a.string().required(),
       email: a.string().required(),
-      bio: a.string(),
+      bio: a.string().default("No bio yet"),
       profilePic: a.url(),
       profileBanner: a.url(),
       jobs: a.hasMany("Job", "userId"),
     })
-    .authorization((allow) => [allow.authenticated()]),
+    .authorization((allow) => [allow.publicApiKey().to(['create']),allow.authenticated()]),
   Job: a
     .model({
       userId: a.id(),

@@ -4,6 +4,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
 import { useState, useEffect } from "react";
+import outputs from "@/amplify_outputs.json";
+import { Amplify } from "aws-amplify"; 
+Amplify.configure(outputs);
 const MyProfile = () => {
   const client = generateClient<Schema>();
   const [userBannerUrl, setUserBannerUrl] = useState("");
