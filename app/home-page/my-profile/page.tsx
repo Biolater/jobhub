@@ -18,7 +18,6 @@ const MyProfile = () => {
           throw new Error(errors[0].message);
         } else {
           console.log(userData);
-          setUserBannerUrl(userData?.bannerUrl || "");
         }
       } catch (err) {
         console.log(err);
