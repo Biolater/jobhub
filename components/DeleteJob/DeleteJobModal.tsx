@@ -73,6 +73,8 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
       setLoading(true);
       const { data: deletedJob, errors } = await client.models.Job.delete({
         id: jobId,
+      }, {
+        authMode: 'userPool'
       });
       if (errors) {
         throw new Error(errors[0].message);

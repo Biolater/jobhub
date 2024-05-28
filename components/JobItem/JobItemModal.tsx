@@ -202,6 +202,8 @@ const JobItemModal: FC<JobItemModalProps> = ({
                     await client.models.Job.update({
                       id: jobId,
                       ...updatedData,
+                    },{
+                      authMode: 'userPool'
                     });
                   if (errors) {
                     throw new Error(errors[0].message);
