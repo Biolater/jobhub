@@ -9,6 +9,7 @@ import ProfilePopUp from "./ProfilePopUp/ProfilePopUp";
 import Sidebar from "./Sidebar/Sidebar";
 import SidebarWideScreen from "./Sidebar/SidebarWideScreen";
 import SidebarSearchBar from "./SidebarSearchBar/SidebarSearchBar";
+import ProfileBanner from "./ProfileBanner/ProfileBanner";
 export {
   Navbar,
   AddJobModal,
@@ -21,4 +22,5 @@ export {
   Sidebar,
   SidebarWideScreen,
   SidebarSearchBar,
+  ProfileBanner,
 };

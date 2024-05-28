@@ -14,9 +14,10 @@ const schema = a.schema({
       email: a.string().required(),
       bio: a.string(),
       profilePic: a.url(),
+      profileBanner: a.url(),
       jobs: a.hasMany("Job", "userId"),
     })
-    .authorization((allow) => [allow.publicApiKey(), allow.authenticated()]),
+    .authorization((allow) => [allow.authenticated()]),
   Job: a
     .model({
       userId: a.id(),
@@ -29,7 +30,7 @@ const schema = a.schema({
       notes: a.string(),
       user: a.belongsTo("User", "userId"),
     })
-    .authorization((allow) => [allow.publicApiKey(), allow.authenticated()]),
+    .authorization((allow) => [allow.authenticated()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

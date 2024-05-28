@@ -1,3 +1,4 @@
+"use client"
 import { motion } from "framer-motion";
 import { SearchIcon } from "../Icons";
 import { FC, useEffect, useRef } from "react";

@@ -1,3 +1,4 @@
+"use client"
 import { FC, useRef, useState } from "react";
 import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";

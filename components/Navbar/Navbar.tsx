@@ -1,3 +1,4 @@
+"use client";
 /**
  * @fileoverview The Navbar component
  * @author Yusif Bekirov
