@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-const ProfileBanner: FC<{ bannerUrl: string }> = ({ bannerUrl }) => {
+const ProfileBanner: FC<{ bannerUrl: string | null }> = ({ bannerUrl }) => {
   const bannerStyle = {
     backgroundImage: `url(https://robertmarshall.dev/static/d71528d312b579dd0449078f8a8f56ab/b5380/reactjs-1.png)`,
     height: "100%",

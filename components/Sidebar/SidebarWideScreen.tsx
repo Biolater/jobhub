@@ -118,7 +118,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
         className="sidebar__inner p-4 h-full flex flex-col justify-between"
       >
         <motion.div layout className="sidebar__top">
-          <Link href="/my-profile">
+          <Link href="/home-page/my-profile">
             <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
               <div className="userProfile__left flex items-center gap-2">
                 <div className="userProfile__pic size-[40px]">

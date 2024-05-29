@@ -97,7 +97,7 @@ const ProfilePopUp: FC<{
     if (text === "Logout") {
       handleSignOut();
     } else if (text === "View Profile") {
-      router.push(`/my-profile`);
+      router.push(`/home-page/my-profile`);
     }
   };
   const profileActions: profileActionsItem[] = [
