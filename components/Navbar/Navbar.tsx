@@ -9,6 +9,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { AddJobModalPortal, ProfilePopUp } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 /**
  * The Navbar component
@@ -19,7 +20,7 @@ import Link from "next/link";
 const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
   const [jobModalActive, setJobModalActive] = useState<boolean>(false);
   const [profilePopUpActive, setProfilePopUpActive] = useState<boolean>(false);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, userDetails } = useAuth();
   /**
    * Toggles the job modal active state
    */
@@ -95,7 +96,7 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
                 onClick={handleProfilePopUp}
                 className="profile__button z-10 relative"
               >
-                <div className="profile__picture size-9 bg-black rounded-full"></div>
+                <Image width={36} height={36} src={userDetails.profilePic} alt="profile image" />
               </button>
             )}
           </div>

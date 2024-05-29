@@ -41,7 +41,7 @@ export default function Home() {
 
   // Amplify client setup
   const client = generateClient<Schema>();
-  const { userId, setUserName, setUserJobStatuses } = useAuth();
+  const { userId, setUserJobStatuses } = useAuth();
   const searchbarValue = useSelector(selectSearchbarValue);
   useEffect(() => {
     const searchbarValueLowerCase = searchbarValue.toLowerCase();
@@ -70,7 +70,6 @@ export default function Home() {
         if (errors) {
           throw new Error(errors[0].message);
         } else {
-          setUserName(userData?.username || "");
           // Get the user's jobs from the Data Store
           const userJobs = (await userData?.jobs())?.data;
           const jobStatuses = userJobs?.map((job) => job.status);

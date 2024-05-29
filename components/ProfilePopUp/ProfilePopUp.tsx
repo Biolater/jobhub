@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { useRef, useEffect, FC } from "react";
 import ProfileBadge from "./ProfileBadge";
@@ -8,6 +8,7 @@ import { signOut } from "aws-amplify/auth";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Image from "next/image";
 const profilePopUpVariants = {
   inital: {
     opacity: 0,
@@ -51,9 +52,9 @@ const handleSignOut = async () => {
 };
 
 const ProfilePopUp: FC<{
-  handleOutsideClickPopUp: (event: MouseEvent) => void;
+  handleOutsideClickPopUp: (event?: MouseEvent) => void;
 }> = ({ handleOutsideClickPopUp }) => {
-  const { email, userName, userJobStatuses } = useAuth();
+  const { email, userDetails , userJobStatuses } = useAuth();
   const router = useRouter();
   const badgeItems: badgeItem[] = [
     {
@@ -97,6 +98,7 @@ const ProfilePopUp: FC<{
     if (text === "Logout") {
       handleSignOut();
     } else if (text === "View Profile") {
+      handleOutsideClickPopUp();
       router.push(`/home-page/my-profile`);
     }
   };
@@ -132,14 +134,14 @@ const ProfilePopUp: FC<{
       initial="inital"
       animate="animate"
       exit="exit"
-      className="profilePopUp p-4 z-[5] right-5 md:right-0 flex flex-col gap-4  items-center top-[66px] absolute bg-zephyr rounded-xl max-w-[300px]"
+      className="profilePopUp shadow-lg p-4 z-[5] right-5 md:right-0 flex flex-col gap-4  items-center top-[66px] absolute bg-zephyr rounded-xl max-w-[300px]"
     >
-      <div className="profilePicture size-[80px]">
-        <div className="w-full h-full bg-black rounded-full"></div>
+      <div className="profilePicture">
+        <Image width={80} src={userDetails.profilePic || ""} height={80} alt="profile picture" className=" rounded-full" />
       </div>
       <div className="profile__details text-center text-whitish">
         <h3 className="profile__name text-2xl font-semibold">
-          Hi, {userName} 😊
+          Hi, {userDetails.username} 😊
         </h3>
         <p className="profile__email mb-2">{email}</p>
         <div className="badges flex items-center text-xs flex-wrap justify-center font-medium gap-2">

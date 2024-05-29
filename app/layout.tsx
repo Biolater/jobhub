@@ -24,7 +24,7 @@ export default function RootLayout({
           <html lang="en">
             <body className={inter.className}>
               {children}
-              <Toaster position="top-center" />
+              <Toaster containerStyle={{ zIndex: 10000 }} position="top-center" />
             </body>
           </html>
         </JobDetailsProvider>

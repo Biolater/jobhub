@@ -13,8 +13,8 @@ const schema = a.schema({
       username: a.string().required(),
       email: a.string().required(),
       bio: a.string().default("No bio yet"),
-      profilePic: a.url(),
-      profileBanner: a.url(),
+      profilePic: a.string().required(),
+      profileBanner: a.string(),
       jobs: a.hasMany("Job", "userId"),
     })
     .authorization((allow) => [allow.publicApiKey().to(['create']),allow.authenticated()]),

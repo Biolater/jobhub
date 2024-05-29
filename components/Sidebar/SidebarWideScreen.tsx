@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FC, useRef, useState } from "react";
 import { signOut } from "aws-amplify/auth";
 import { motion } from "framer-motion";
@@ -15,33 +15,33 @@ import {
 } from "../Icons";
 import { useAuth } from "@/contexts/AuthContext";
 import SidebarItem from "./SidebarItem";
-
+import Image from "next/image";
 const TOP_SIDEBAR_ITEMS: {
   text: string;
   icon: JSX.Element;
   testId?: string;
   onClick: (router: ReturnType<typeof useRouter>) => void;
 }[] = [
-    {
-      text: "Search through your jobs",
-      icon: <SearchIcon />,
-      testId: "sidebarWideScreen__searchButton",
-      onClick: (router: ReturnType<typeof useRouter>) =>
-        router.push("/home-page"),
-    },
-    {
-      text: "Applications Dashboard",
-      icon: <DashboardIcon />,
-      onClick: (router: ReturnType<typeof useRouter>) =>
-        router.push("/home-page/dashboard"),
-    },
-    {
-      text: "Browse Job Board",
-      icon: <BrowseJobsIcon />,
-      onClick: (router: ReturnType<typeof useRouter>) =>
-        router.push("/home-page/job-board"),
-    },
-  ];
+  {
+    text: "Search through your jobs",
+    icon: <SearchIcon />,
+    testId: "sidebarWideScreen__searchButton",
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page"),
+  },
+  {
+    text: "Applications Dashboard",
+    icon: <DashboardIcon />,
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page/dashboard"),
+  },
+  {
+    text: "Browse Job Board",
+    icon: <BrowseJobsIcon />,
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page/job-board"),
+  },
+];
 
 const BOTTOM_SIDEBAR_ITEMS = [
   {
@@ -55,7 +55,7 @@ const BOTTOM_SIDEBAR_ITEMS = [
 ];
 
 const SIDEBAR_INNER_VARIANTS = {
-  initial: { opacity: 0},
+  initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
@@ -73,7 +73,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const { userName, email } = useAuth();
+  const { userDetails } = useAuth();
 
   const handleSignOut = async (text: string) => {
     if (text === "Logout") {
@@ -94,7 +94,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
     const item = TOP_SIDEBAR_ITEMS[index];
     if (item.text === "Search through your jobs") {
       item.onClick(router);
-      onSearchButtonClick()
+      onSearchButtonClick();
     } else {
       item.onClick(router);
     }
@@ -122,14 +122,20 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
             <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
               <div className="userProfile__left flex items-center gap-2">
                 <div className="userProfile__pic size-[40px]">
-                  <div className="w-full h-full rounded-full bg-black"></div>
+                  <Image
+                    alt="profile picture"
+                    src={userDetails.profilePic || ""}
+                    width={40}
+                    height={40}
+                    className=" rounded-full"
+                  />{" "}
                 </div>
                 <div className="userProfile__details sm:hidden flex flex-col">
                   <p className="userProfile__name text-lg text-whitish font-semibold">
-                    {userName}
+                    {userDetails.username}
                   </p>
                   <p className="userProfile__email text-sm text-whitish/50">
-                    {email}
+                    {userDetails.email}
                   </p>
                 </div>
               </div>

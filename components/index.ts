@@ -11,6 +11,7 @@ import SidebarWideScreen from "./Sidebar/SidebarWideScreen";
 import SidebarSearchBar from "./SidebarSearchBar/SidebarSearchBar";
 import ProfileBanner from "./ProfileBanner/ProfileBanner";
 import ProfileInformation from "./ProfileInformation/ProfileInformation";
+import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
 export {
   Navbar,
   AddJobModal,
@@ -24,5 +25,6 @@ export {
   SidebarWideScreen,
   SidebarSearchBar,
   ProfileBanner,
-  ProfileInformation
+  ProfileInformation,
+  LoadingSpinner,
 };

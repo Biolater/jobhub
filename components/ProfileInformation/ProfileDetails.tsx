@@ -1,5 +1,6 @@
 import { MailIcon, BirthdayCakeIcon } from "@/components/Icons/index";
 import { FC } from "react";
+import { formatDate } from "@/lib/timestampToDate";
 const ProfileDetails: FC<{ email: string; joinDate: string }> = ({
   email,
   joinDate,
@@ -13,7 +14,7 @@ const ProfileDetails: FC<{ email: string; joinDate: string }> = ({
     {
       icon: <BirthdayCakeIcon />,
       title: "Join date",
-      value: joinDate,
+      value: `Joined on ${formatDate(joinDate)}`,
     },
   ];
   return (

@@ -43,8 +43,8 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     event.preventDefault();
 
     // Validation check
-    for (const [_, value] of Object.entries(formData)) {
-      if (value !== "notes" && !value) {
+    for (const [field, value] of Object.entries(formData)) {
+      if (field !== "note" && !value) {
         toast.error(`Please fill all fields.`);
         return;
       }
