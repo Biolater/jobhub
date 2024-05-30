@@ -98,8 +98,8 @@ const Sidebar: FC<{
     if (item.text === "Search through your jobs") {
       item.onClick();
       setTimeout(() => {
-        onSearchBar()
-      }, 200)
+        onSearchBar();
+      }, 200);
     } else if (item.onClick) {
       item.onClick();
     }
@@ -153,7 +153,15 @@ const Sidebar: FC<{
               <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
                 <div className="userProfile__left flex items-center gap-2">
                   <div className="userProfile__pic">
-                    <Image alt="profile picture" src={userDetails.profilePic || ""} width={40}  height={40} className=" rounded-full" />
+                    {userDetails?.profilePic && (
+                      <Image
+                        alt="profile picture"
+                        src={userDetails.profilePic}
+                        width={40}
+                        height={40}
+                        className=" rounded-full"
+                      />
+                    )}
                   </div>
                   <div className="userProfile__details sm:hidden flex flex-col">
                     <p className="userProfile__name text-lg text-whitish font-semibold">

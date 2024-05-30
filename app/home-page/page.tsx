@@ -87,7 +87,7 @@ export default function Home() {
               | "Rejected",
           }));
           // Update the state with the user's jobs
-          setUserJobs(sanitizedJobs || []); // Use || [] to handle undefined case
+          setUserJobs(sanitizedJobs || []);
         }
       } catch (err) {
         toast.error("Error fetching user data");

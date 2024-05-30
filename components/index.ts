@@ -12,6 +12,7 @@ import SidebarSearchBar from "./SidebarSearchBar/SidebarSearchBar";
 import ProfileBanner from "./ProfileBanner/ProfileBanner";
 import ProfileInformation from "./ProfileInformation/ProfileInformation";
 import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
+import EditProfileModal from "./EditProfileModal.tsx/EditProfileModal";
 export {
   Navbar,
   AddJobModal,
@@ -27,4 +28,5 @@ export {
   ProfileBanner,
   ProfileInformation,
   LoadingSpinner,
+  EditProfileModal,
 };

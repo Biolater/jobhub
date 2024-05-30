@@ -14,7 +14,7 @@ import Link from "next/link";
 /**
  * The Navbar component
  * @param {Object} props - Component props
- * 
+ *
  * @return {ReactElement} - Component
  */
 const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
@@ -96,7 +96,15 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
                 onClick={handleProfilePopUp}
                 className="profile__button z-10 relative"
               >
-                <Image width={36} height={36} src={userDetails.profilePic} alt="profile image" />
+                {userDetails?.profilePic && (
+                  <Image
+                    width={36}
+                    height={36}
+                    src={userDetails.profilePic}
+                    alt="profile image"
+                    className="rounded-full"
+                  />
+                )}
               </button>
             )}
           </div>

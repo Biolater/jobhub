@@ -54,7 +54,7 @@ const handleSignOut = async () => {
 const ProfilePopUp: FC<{
   handleOutsideClickPopUp: (event?: MouseEvent) => void;
 }> = ({ handleOutsideClickPopUp }) => {
-  const { email, userDetails , userJobStatuses } = useAuth();
+  const { email, userDetails, userJobStatuses } = useAuth();
   const router = useRouter();
   const badgeItems: badgeItem[] = [
     {
@@ -137,7 +137,15 @@ const ProfilePopUp: FC<{
       className="profilePopUp shadow-lg p-4 z-[5] right-5 md:right-0 flex flex-col gap-4  items-center top-[66px] absolute bg-zephyr rounded-xl max-w-[300px]"
     >
       <div className="profilePicture">
-        <Image width={80} src={userDetails.profilePic || ""} height={80} alt="profile picture" className=" rounded-full" />
+        {userDetails.profilePic && (
+          <Image
+            width={80}
+            src={userDetails.profilePic}
+            height={80}
+            alt="profile picture"
+            className=" rounded-full"
+          />
+        )}
       </div>
       <div className="profile__details text-center text-whitish">
         <h3 className="profile__name text-2xl font-semibold">
