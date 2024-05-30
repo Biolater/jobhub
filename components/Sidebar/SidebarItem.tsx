@@ -5,8 +5,9 @@ const SidebarItem: FC<{
   isActive?: boolean;
   text: string;
   icon: JSX.Element;
+  testId?: string;
   onClick?: () => void;
-}> = ({ isActive, text, icon, onClick }) => {
+}> = ({ isActive, text, icon, onClick, testId }) => {
   return (
     <Tooltip
       className="bg-[#3C4043] hidden sm:block text-sm px-2 py-1 rounded-sm text-whitish"
@@ -16,6 +17,7 @@ const SidebarItem: FC<{
       closeDelay={0}
     >
       <button
+        data-testid={testId || "sidebarItem"}
         onClick={onClick}
         className={`sidebarItem sm:py-[13.5px] sm:justify-center active:scale-90 w-full hover:bg-disabledColor/20 p-2 rounded-lg ${
           isActive && "bg-disabledColor/20"

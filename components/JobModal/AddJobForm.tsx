@@ -43,30 +43,37 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
     event.preventDefault();
 
     // Validation check
-    for (const [_, value] of Object.entries(formData)) {
-      if (!value) {
+    for (const [field, value] of Object.entries(formData)) {
+      if (field !== "note" && !value) {
         toast.error(`Please fill all fields.`);
         return;
       }
     }
 
     try {
-      const { data, errors } = await client.models.Job.create({
-        userId,
-        title: formData.jobTitle,
-        joburl: formData.jobUrl,
-        company: formData.companyName,
-        description: formData.description,
-        status: formData.status,
-        date: formData.date,
-        notes: formData.note,
-      });
+      const { data, errors } = await client.models.Job.create(
+        {
+          userId,
+          title: formData.jobTitle,
+          joburl: formData.jobUrl,
+          company: formData.companyName,
+          description: formData.description,
+          status: formData.status,
+          date: formData.date,
+          notes: formData.note,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
       if (errors) {
         toast.error("Error creating job");
+        handleCancel();
         throw new Error(errors[0].message);
       }
       if (data) {
         toast.success("Job created successfully");
+        handleCancel();
       }
       // Reset form fields after successful submission
       setFormData({
@@ -78,7 +85,6 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
         date: "",
         note: "",
       });
-      handleCancel();
     } catch (error) {
       console.log(error);
     }

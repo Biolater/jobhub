@@ -1,19 +1,57 @@
 import Image from "next/image";
 import ProfileDetails from "./ProfileDetails";
-const ProfileInformation = () => {
+import { FC } from "react";
+import { motion } from "framer-motion";
+const ProfileInformation: FC<{
+  profileImage: string;
+  username: string;
+  bio: string;
+  email: string;
+  joinDate: string;
+}> = ({ profileImage, username, bio, email, joinDate }) => {
+  const EDIT_BUTTON_VARIANTS = {
+    whileHover: {
+      scale: 1.065,
+      transition: {
+        type: "spring",
+        stiffness: 200,
+        damping: 10,
+      },
+    },
+    whileTap: {
+      scale: 0.97,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      },
+    },
+  };
   return (
-    <div className="profileInformation">
-      <div className="profilePhoto">
-        <Image
-          width={100}
-          height={100}
-          alt="profile photo"
-          src="https://t4.ftcdn.net/jpg/04/95/28/65/360_F_495286577_rpsT2Shmr6g81hOhGXALhxWOfx1vOQBa.jpg"
-        />
+    <div className="profileInformation relative bg-zephyr py-4 px-2 rounded-lg flex flex-col justify-center items-center">
+      <motion.button
+        variants={EDIT_BUTTON_VARIANTS}
+        whileTap="whileTap"
+        whileHover="whileHover"
+        className="absolute p-2 top-2 right-2 rounded-lg bg-secondary text-whitish font-semibold"
+      >
+        Edit profile
+      </motion.button>
+      <div className="profilePhoto mb-2">
+        {profileImage && (
+          <Image
+            alt="profile photo"
+            src={profileImage}
+            width={100}
+            height={100}
+            className="rounded-full h-full"
+            priority
+          />
+        )}
       </div>
-      <p className="username">Murad Yusubov</p>
-      <p className="bio">Im a fullstack dev</p>
-      <ProfileDetails />
+      <p className="username text-whitish text-2xl font-semibold">{username}</p>
+      <p className="bio mb-2 text-whitish">{bio}</p>
+      <ProfileDetails joinDate={joinDate} email={email} />
     </div>
   );
 };

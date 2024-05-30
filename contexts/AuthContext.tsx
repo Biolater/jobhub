@@ -6,18 +6,31 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { Hub } from "aws-amplify/utils";
 import { useRouter } from "next/navigation";
 import action from "@/app/actions";
+import { generateClient } from "aws-amplify/api";
+import { type Schema } from "@/amplify/data/resource";
 Amplify.configure(outputs);
+
+type UserDetailsType = {
+  email: string;
+  username: string;
+  profilePic: string;
+  bio: string;
+  joinDate: string;
+  profileBanner: string | null;
+};
 
 const AuthContext = createContext({
   isLoggedIn: false,
   email: "",
-  userName: "",
   userId: "",
   userJobStatuses: [""],
+  userDetails: {} as UserDetailsType,
+  userDetailsLoading: true,
   setUserEmail: (email: string) => {},
   setUserId: (id: string) => {},
-  setUserName: (name: string) => {},
   setUserJobStatuses: (jobs: any) => {},
+  setUserDetails: (details: UserDetailsType) => {},
+  setUserDetailsLoading : (value: boolean) => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -26,12 +39,52 @@ export default function AuthContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const client = generateClient<Schema>();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setUserEmail] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
+  const [userDetails, setUserDetails] = useState({} as UserDetailsType);
+  const [userDetailsLoading, setUserDetailsLoading] = useState(true);
   const [userJobStatuses, setUserJobStatuses] = useState<string[]>([]);
+  const getUserData = async (userid: string) => {
+    try {
+      const { data, errors } = await client.models.User.get(
+        {
+          id: userid,
+        },
+        {
+          authMode: "userPool",
+          selectionSet: [
+            "profilePic",
+            "username",
+            "email",
+            "bio",
+            "createdAt",
+            "profileBanner",
+          ],
+        }
+      );
+      if (errors) {
+        throw new Error(errors[0].message);
+      } else {
+        if (data) {
+          setUserDetails({
+            email: data.email,
+            username: data.username,
+            profilePic: data.profilePic,
+            bio: data?.bio || "No bio yet",
+            joinDate: data.createdAt,
+            profileBanner: data?.profileBanner || null,
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }finally{
+      setUserDetailsLoading(false);
+    }
+  };
   Hub.listen("auth", ({ payload }) => {
     switch (payload.event) {
       case "signedIn":
@@ -40,6 +93,7 @@ export default function AuthContextProvider({
         action(true);
         setIsLoggedIn(true);
         setUserId(payload.data.username);
+        getUserData(payload.data.username);
         router.push("/home-page");
         break;
       case "signedOut":
@@ -47,7 +101,15 @@ export default function AuthContextProvider({
         setIsLoggedIn(false);
         setUserId("");
         setUserEmail("");
-        setUserName("");
+        setUserJobStatuses([]);
+        setUserDetails({
+          email: "",
+          username: "",
+          profilePic: "",
+          bio: "",
+          joinDate: "",
+          profileBanner: null,
+        });
         router.push("/");
         break;
       default:
@@ -70,12 +132,25 @@ export default function AuthContextProvider({
         setIsLoggedIn(false);
         setUserId("");
         setUserEmail("");
+        setUserDetails({
+          email: "",
+          username: "",
+          profilePic: "",
+          bio: "",
+          joinDate: "",
+          profileBanner: null,
+        })
         action(false);
-        setUserName("");
+        setUserJobStatuses([]);
       }
     };
     checkAuth();
   }, []);
+  useEffect(() => {
+    if (userId) {
+      getUserData(userId);
+    }
+  }, [userId]);
   return (
     <AuthContext.Provider
       value={{
@@ -83,9 +158,11 @@ export default function AuthContextProvider({
         email,
         setUserEmail,
         userId,
+        userDetailsLoading,
+        setUserDetailsLoading,
         setUserId,
-        userName,
-        setUserName,
+        setUserDetails,
+        userDetails,
         userJobStatuses,
         setUserJobStatuses,
       }}

@@ -1,38 +1,27 @@
 "use client";
-import { ProfileBanner } from "@/components/index";
+import { ProfileBanner, ProfileInformation } from "@/components/index";
 import { useAuth } from "@/contexts/AuthContext";
-import { generateClient } from "aws-amplify/data";
 import { type Schema } from "@/amplify/data/resource";
-import { useState, useEffect } from "react";
-import outputs from "@/amplify_outputs.json";
-import { Amplify } from "aws-amplify"; 
-Amplify.configure(outputs);
+import { LoadingSpinner } from "@/components/index";
+
 const MyProfile = () => {
-  const client = generateClient<Schema>();
-  const [userBannerUrl, setUserBannerUrl] = useState("");
-  const { userId } = useAuth();
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { data: userData, errors } = await client.models.User.get({
-          id: userId,
-        });
-        if (errors) {
-          throw new Error(errors[0].message);
-        } else {
-          console.log(userData);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (userId) {
-      fetchUserData();
-    }
-  }, [userId]);
-  return (
-    <main className="myProfile p-4">
-      <ProfileBanner bannerUrl={userBannerUrl} />
+  const { userDetails, userDetailsLoading } = useAuth();
+
+  return userDetailsLoading ? (
+    <LoadingSpinner className="h-[calc(100vh-64px)]" />
+  ) : (
+    <main className="myProfile flex flex-col gap-4 p-4">
+      <h1 className="text-center text-whitish font-semibold text-2xl">
+        My profile
+      </h1>
+      <ProfileBanner bannerUrl={userDetails?.profileBanner} />
+      <ProfileInformation
+        bio={userDetails.bio}
+        email={userDetails.email}
+        joinDate={userDetails.joinDate}
+        profileImage={userDetails.profilePic}
+        username={userDetails.username}
+      />
     </main>
   );
 };

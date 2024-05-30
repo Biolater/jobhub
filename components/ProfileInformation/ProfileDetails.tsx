@@ -1,25 +1,30 @@
 import { MailIcon, BirthdayCakeIcon } from "@/components/Icons/index";
-const ProfileDetails = () => {
+import { FC } from "react";
+import { formatDate } from "@/lib/timestampToDate";
+const ProfileDetails: FC<{ email: string; joinDate: string }> = ({
+  email,
+  joinDate,
+}) => {
   const profileDetails = [
     {
       icon: <MailIcon />,
       title: "Email",
-      value: "yusifovmurad1@gmail.com",
+      value: email,
     },
     {
       icon: <BirthdayCakeIcon />,
       title: "Join date",
-      value: "Joined at 2024, December 10",
+      value: `Joined on ${formatDate(joinDate)}`,
     },
   ];
   return (
-    <div className="profile__details">
+    <div className="profile__details flex flex-wrap justify-center items-center gap-2">
       {profileDetails.map((item, index) => (
         <div
-          className="profile__detail flex items-center gap-1 text-whitish/60"
+          className="profile__detail text-sm font-semibold flex items-center gap-2 text-whitish/60"
           key={index}
         >
-          {item.icon}
+          <div className="profileDetail__icon size-[25px]">{item.icon}</div>
           <p className="profile__detail__value">{item.value}</p>
         </div>
       ))}

@@ -21,6 +21,7 @@ import {
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
 import { useSelector } from "react-redux";
 import { selectSearchbarValue } from "../store/searchbarSlice";
+import toast from "react-hot-toast";
 export default function Home() {
   // State variables
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,7 +41,7 @@ export default function Home() {
 
   // Amplify client setup
   const client = generateClient<Schema>();
-  const { userId, setUserName, setUserJobStatuses } = useAuth();
+  const { userId, setUserJobStatuses } = useAuth();
   const searchbarValue = useSelector(selectSearchbarValue);
   useEffect(() => {
     const searchbarValueLowerCase = searchbarValue.toLowerCase();
@@ -62,13 +63,13 @@ export default function Home() {
         // Fetch user data from the Amplify Data Store
         const { data: userData, errors } = await client.models.User.get({
           id: userId,
+        }, {
+          authMode: 'userPool'
         });
-
         // Error handling
         if (errors) {
           throw new Error(errors[0].message);
         } else {
-          setUserName(userData?.username || "");
           // Get the user's jobs from the Data Store
           const userJobs = (await userData?.jobs())?.data;
           const jobStatuses = userJobs?.map((job) => job.status);
@@ -86,10 +87,10 @@ export default function Home() {
               | "Rejected",
           }));
           // Update the state with the user's jobs
-          setUserJobs(sanitizedJobs || []); // Use || [] to handle undefined case
+          setUserJobs(sanitizedJobs || []);
         }
       } catch (err) {
-        console.error(err);
+        toast.error("Error fetching user data");
       } finally {
         setLoading(false);
       }
@@ -97,7 +98,7 @@ export default function Home() {
     if (userId) fetchUserData();
   }, [userId]);
   useEffect(() => {
-    const subscription = client.models.Job.observeQuery().subscribe({
+    const subscription = client.models.Job.observeQuery({authMode: "userPool"}).subscribe({
       next: ({ items }) => {
         // Update the state with the latest user jobs
         if (userId) {

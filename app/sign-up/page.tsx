@@ -7,17 +7,30 @@ import { Amplify } from "aws-amplify";
 import outputs from "../../amplify_outputs.json";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { createAvatar } from '@dicebear/core';
+import { pixelArt } from '@dicebear/collection';
+
 const Signup = () => {
-  const { setUserEmail, setUserId } = useAuth();
+  const { setUserEmail } = useAuth();
   Amplify.configure(outputs);
   const client = generateClient<Schema>();
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const createDefAvatar = (seed: string) => {
+    const avatar = createAvatar(pixelArt, {
+      seed,
+      backgroundColor: ["b6e3f4","c0aede","d1d4f9"],
+      backgroundType: ['gradientLinear']
+    });
 
+    const dataUri = avatar.toDataUriSync();
+    return dataUri
+  }
   const handleSignUp = async (username: string, password: string) => {
     try {
+      const avatarUri = createDefAvatar(name);
       const userFromAws = await signUp({
         username,
         password,
@@ -32,6 +45,7 @@ const Signup = () => {
         id: userFromAws?.userId,
         email: email,
         username: name,
+        profilePic: avatarUri,
       });
       if (errors) {
         throw new Error(errors[0].message);
