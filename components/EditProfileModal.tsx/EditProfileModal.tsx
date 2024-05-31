@@ -1,5 +1,5 @@
 'use client';
-import { FC, useRef } from "react";
+import { FC, MouseEventHandler, useRef } from "react";
 import { CloseIcon } from "../Icons";
 import ModalItem from "./ModalItem";
 import { motion } from "framer-motion";
@@ -33,7 +33,7 @@ const EditProfileModal: FC<{ handleClose: () => void }> = ({ handleClose }) => {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -30 },
   };
-  const handleOutsideClick = (event: MouseEvent) => {
+  const handleOutsideClick: MouseEventHandler<HTMLDivElement> = (event) => {
     if(modalRef.current && !modalRef.current.contains(event.target as Node)){
       handleClose();
     }
