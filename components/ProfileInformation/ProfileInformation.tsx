@@ -31,6 +31,7 @@ const ProfileInformation: FC<{
   return (
     <div className="profileInformation relative bg-zephyr py-4 px-2 rounded-lg flex flex-col justify-center items-center">
       <motion.button
+        data-testid="editProfileButton"
         onClick={handleModalOpen}
         variants={EDIT_BUTTON_VARIANTS}
         whileTap="whileTap"
@@ -47,7 +48,6 @@ const ProfileInformation: FC<{
             width={100}
             height={100}
             className="rounded-full h-full"
-            priority
           />
         )}
       </div>

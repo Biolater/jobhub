@@ -1,5 +1,5 @@
-'use client';
-import { FC, MouseEventHandler, useRef } from "react";
+"use client";
+import { FC, MouseEventHandler, useRef, useEffect } from "react";
 import { CloseIcon } from "../Icons";
 import ModalItem from "./ModalItem";
 import { motion } from "framer-motion";
@@ -34,12 +34,22 @@ const EditProfileModal: FC<{ handleClose: () => void }> = ({ handleClose }) => {
     exit: { opacity: 0, y: -30 },
   };
   const handleOutsideClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    if(modalRef.current && !modalRef.current.contains(event.target as Node)){
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       handleClose();
     }
-  }
+  };
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscKey);
+    return () => document.removeEventListener("keydown", handleEscKey);
+  }, []);
   return (
     <motion.div
+      data-testid="editProfileModal"
       onClick={handleOutsideClick}
       variants={EDIT_PROFILE_MODAL_LAYER_VARIANTS}
       initial="initial"
@@ -60,7 +70,10 @@ const EditProfileModal: FC<{ handleClose: () => void }> = ({ handleClose }) => {
             <h2 className="header__title font-semibold text-lg">
               Edit Profile
             </h2>
-            <button onClick={handleClose} className="close__btn focus:ring-2 p-1 focus:ring-offset-2 rounded-sm  ">
+            <button
+              onClick={handleClose}
+              className="close__btn focus:ring-2 p-1 focus:ring-offset-2 rounded-sm  "
+            >
               <CloseIcon className="close__icon transition-colors duration-200 fill-whitish hover:fill-white" />
             </button>
           </div>
