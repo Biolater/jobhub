@@ -8,7 +8,8 @@ const ProfileInformation: FC<{
   bio: string;
   email: string;
   joinDate: string;
-}> = ({ profileImage, username, bio, email, joinDate }) => {
+  handleModalOpen: () => void;
+}> = ({ profileImage, username, bio, email, joinDate, handleModalOpen }) => {
   const EDIT_BUTTON_VARIANTS = {
     whileHover: {
       scale: 1.065,
@@ -30,6 +31,7 @@ const ProfileInformation: FC<{
   return (
     <div className="profileInformation relative bg-zephyr py-4 px-2 rounded-lg flex flex-col justify-center items-center">
       <motion.button
+        onClick={handleModalOpen}
         variants={EDIT_BUTTON_VARIANTS}
         whileTap="whileTap"
         whileHover="whileHover"
@@ -37,7 +39,7 @@ const ProfileInformation: FC<{
       >
         Edit profile
       </motion.button>
-      <div className="profilePhoto mb-2">
+      <div className="profilePhoto mb-2 sm:mb-3">
         {profileImage && (
           <Image
             alt="profile photo"
@@ -49,8 +51,10 @@ const ProfileInformation: FC<{
           />
         )}
       </div>
-      <p className="username text-whitish text-2xl font-semibold">{username}</p>
-      <p className="bio mb-2 text-whitish">{bio}</p>
+      <p className="username text-whitish text-2xl font-semibold sm:text-3xl">
+        {username}
+      </p>
+      <p className="bio mb-2 sm:mb-3 text-whitish sm:text-lg">{bio}</p>
       <ProfileDetails joinDate={joinDate} email={email} />
     </div>
   );
