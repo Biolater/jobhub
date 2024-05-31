@@ -108,14 +108,14 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
       initial="initial"
       animate="animate"
       exit="exit"
-      className="sidebar__content min-h-screen bg-zephyr"
+      className="sidebar__content sticky top-0 h-screen bg-zephyr"
     >
       <motion.div
         variants={SIDEBAR_INNER_VARIANTS}
         initial="initial"
         animate="animate"
         exit="exit"
-        className="sidebar__inner p-4 h-full flex flex-col justify-between"
+        className="sidebar__inner min-h-screen overflow-y-auto p-4 h-full flex flex-col justify-between"
       >
         <motion.div layout className="sidebar__top">
           <Link href="/home-page/my-profile">

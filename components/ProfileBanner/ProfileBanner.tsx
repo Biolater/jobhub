@@ -11,7 +11,7 @@ const ProfileBanner: FC<{ bannerUrl: string | null }> = ({ bannerUrl }) => {
     borderRadius: "10px",
   };
   return (
-    <div className="w-full bannerWrapper h-[150px]">
+    <div className="w-full bannerWrapper h-[150px] md:h-[170px]">
       <div className="bannerInner" style={bannerStyle} />
     </div>
   );

@@ -15,6 +15,8 @@ const schema = a.schema({
       bio: a.string().default("No bio yet"),
       profilePic: a.string().required(),
       profileBanner: a.string(),
+      portfolioUrl: a.url(),
+      location: a.string(),
       jobs: a.hasMany("Job", "userId"),
     })
     .authorization((allow) => [allow.publicApiKey().to(['create']),allow.authenticated()]),

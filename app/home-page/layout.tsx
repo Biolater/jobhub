@@ -36,6 +36,18 @@ const HomePageLayout: FC<{ children: React.ReactNode }> = ({ children }) => {
     setSidebarOpen(false);
   };
 
+  useEffect(() => { 
+    if(sidebarOpen){
+      document.body.style.overflow = "hidden";
+    }else{
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    }
+  }, [sidebarOpen])
+
   const searchBarOutsideWideScreen = () => {
     setSearchbarActive(false);
     setTimeout(() => {
