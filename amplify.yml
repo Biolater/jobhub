@@ -3,13 +3,13 @@ backend:
   phases:
     build:
       commands:
-        - yarn install --frozen-lockfile --prefer-offline
+        - npm ci --cache .npm --prefer-offline
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     build:
       commands:
-        - yarn build 
+        - npm run build 
   artifacts:
     baseDirectory: .next
     files:
@@ -17,5 +17,5 @@ frontend:
   cache:
     paths:
       - .next/cache/**/*
-      - .yarn/**/*
+      - .npm/**/*
       - node_modules/**/*
