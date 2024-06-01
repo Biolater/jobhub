@@ -1,6 +1,6 @@
 "use client";
-import { FC, MouseEventHandler, useRef, useEffect } from "react";
-import { CloseIcon } from "../Icons";
+import { FC, MouseEventHandler, useRef, useEffect, useState } from "react";
+import { CloseIcon, LoadingButtonIcon } from "../Icons";
 import ModalItem from "./ModalItem";
 import { motion } from "framer-motion";
 import { UserDetailsType } from "@/contexts/AuthContext";
@@ -18,6 +18,7 @@ const EditProfileModal: FC<{
 }> = ({ handleClose, userDetails, inputChanged, onInputChange, changes, userId }) => {
   const client = generateClient<Schema>();
   const modalRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
   const EDIT_PROFILE_ITEMS = [
     {
       text: "Name",
@@ -61,6 +62,7 @@ const EditProfileModal: FC<{
   };
   const updateUser = async (id: string,) => {
     try{
+      setLoading(true);
       const { data, errors } = await client.models.User.update({
         id,
         ...changes
@@ -68,26 +70,34 @@ const EditProfileModal: FC<{
         authMode: "userPool"
       })
       if(errors){
+        setLoading(false);
         throw new Error(errors[0].message);
       }else if(data){
         window.location.reload();
-       console.log(data) 
       }
-    }catch(err){
-      console.log(err);
-      toast.error("Error updating profile");
+      setLoading(false);
+    }catch(err: unknown){
+      if (err instanceof Error) {
+        if (err.message.includes("portfolioUrl")) {
+          toast.error("Please enter a valid portfolio url");
+        } else {
+          toast.error("Error updating profile");
+        }
+      } else {
+        toast.error("An unknown error occurred");
+      }
     }
   }
   const handleSaveChanges = () => {
     if (!inputChanged) {
       toast.error("No changes were made");
       return;
-    } else {
-      toast.promise(updateUser(userId), {
-        loading: "Updating profile...",
-        success: "Profile updated successfully",
-        error: "Error updating profile",
-      })
+    } else if(inputChanged && loading){
+      toast.error("Please wait while we update your profile");
+      return;
+    }
+    else {
+      updateUser(userId);
     }
   };
   const handleInputChange = (key: string, value: string) => {
@@ -152,9 +162,11 @@ const EditProfileModal: FC<{
         </div>
         <footer className="profileEdit__modal-footer w-full flex justify-end">
           <button
+            disabled={loading}
             onClick={handleSaveChanges}
-            className="btn btn-primary font-medium transition-colors hover:bg-whitish/80 py-2 px-4 rounded-md bg-whitish text-sm text-primary"
+            className="btn btn-primary flex items-center font-medium transition-colors hover:bg-whitish/80 py-2 px-4 rounded-md bg-whitish text-sm text-primary"
           >
+              {loading && <LoadingButtonIcon />}
             Save changes
           </button>
         </footer>

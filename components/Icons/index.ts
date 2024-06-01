@@ -11,6 +11,7 @@ import BrowseJobsIcon from "./BrowseJobsIcon";
 import ThreeDotsIcon from "./ThreeDotsIcon";
 import MailIcon from "./MailIcon";
 import BirthdayCakeIcon from "./BirthdayCakeIcon";
+import LoadingButtonIcon from "./LoadingButtonIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -25,4 +26,5 @@ export {
   ThreeDotsIcon,
   MailIcon,
   BirthdayCakeIcon,
+  LoadingButtonIcon,
 };
