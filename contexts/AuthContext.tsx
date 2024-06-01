@@ -10,13 +10,15 @@ import { generateClient } from "aws-amplify/api";
 import { type Schema } from "@/amplify/data/resource";
 Amplify.configure(outputs);
 
-type UserDetailsType = {
+export type UserDetailsType = {
   email: string;
   username: string;
   profilePic: string;
   bio: string;
   joinDate: string;
   profileBanner: string | null;
+  portfolioUrl: string | null;
+  location: string | null;
 };
 
 const AuthContext = createContext({
@@ -62,6 +64,8 @@ export default function AuthContextProvider({
             "bio",
             "createdAt",
             "profileBanner",
+            "portfolioUrl",
+            "location"
           ],
         }
       );
@@ -76,6 +80,8 @@ export default function AuthContextProvider({
             bio: data?.bio || "No bio yet",
             joinDate: data.createdAt,
             profileBanner: data?.profileBanner || null,
+            portfolioUrl: data?.portfolioUrl || "",
+            location: data?.location || ""
           });
         }
       }
@@ -109,6 +115,8 @@ export default function AuthContextProvider({
           bio: "",
           joinDate: "",
           profileBanner: null,
+          portfolioUrl: "",
+          location: ""
         });
         router.push("/");
         break;
@@ -139,6 +147,8 @@ export default function AuthContextProvider({
           bio: "",
           joinDate: "",
           profileBanner: null,
+          portfolioUrl: "",
+          location: ""
         })
         action(false);
         setUserJobStatuses([]);

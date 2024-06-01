@@ -3,7 +3,7 @@ import MyProfile from "@/app/home-page/my-profile/page";
 import userEvent from "@testing-library/user-event";
 jest.mock("../contexts/AuthContext", () => ({
   useAuth: jest.fn(() => ({
-    userDetails: { username: "testuser", email: "test@example.com" }, // Mock user data
+    userDetails: { username: "testuser", email: "test@example.com" },
     userDetailsLoading: false,
   })),
 }));
