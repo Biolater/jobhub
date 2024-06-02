@@ -96,7 +96,7 @@ const DeleteButton: FC<{ onDeleteButtonSelect: () => void }> = ({
       }}
       title="Delete this job"
       initial={{ scale: 0 }}
-      className="jobItem__delete group/deleteIcon absolute right-3 top-3 cursor-pointer size-7"
+      className="jobItem__delete p-1 bg-primary/20 backdrop-blur-md rounded-full group/deleteIcon absolute right-3 top-3 cursor-pointer size-8"
     >
       <DeleteIcon />
     </motion.div>

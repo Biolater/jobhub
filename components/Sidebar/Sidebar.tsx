@@ -12,12 +12,18 @@ import {
   SettingsIcon,
   LogoutIcon,
   ThreeDotsIcon,
+  HomeIcon
 } from "../Icons";
 import { useAuth } from "@/contexts/AuthContext";
 import SidebarItem from "./SidebarItem";
 import Image from "next/image";
 
 const TOP_SIDEBAR_ITEMS = (router: ReturnType<typeof useRouter>) => [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    onClick: () => router.push("/home-page"),
+  },
   {
     text: "Search through your jobs",
     icon: <SearchIcon />,
@@ -185,8 +191,9 @@ const Sidebar: FC<{
                   icon={item.icon}
                   isActive={
                     activeIndex === index ||
-                    (pathname === "/home-page/dashboard" && index === 1) ||
-                    (pathname === "/home-page/job-board" && index === 2)
+                    (pathname === "/home-page" && index === 0) ||
+                    (pathname === "/home-page/dashboard" && index === 2) ||
+                    (pathname === "/home-page/job-board" && index === 3)
                   }
                   onClick={() => handleTopSidebarItemClick(index)}
                 />

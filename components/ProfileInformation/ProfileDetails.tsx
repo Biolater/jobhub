@@ -16,6 +16,9 @@ const ProfileDetails: FC<{ email: string; joinDate: string }> = ({
       title: "Join date",
       value: `Joined on ${formatDate(joinDate)}`,
     },
+    {
+      
+    }
   ];
   return (
     <div className="profile__details flex flex-wrap justify-center items-center gap-2">

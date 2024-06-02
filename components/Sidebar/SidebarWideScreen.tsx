@@ -12,6 +12,7 @@ import {
   SettingsIcon,
   LogoutIcon,
   ThreeDotsIcon,
+  HomeIcon,
 } from "../Icons";
 import { useAuth } from "@/contexts/AuthContext";
 import SidebarItem from "./SidebarItem";
@@ -22,6 +23,12 @@ const TOP_SIDEBAR_ITEMS: {
   testId?: string;
   onClick: (router: ReturnType<typeof useRouter>) => void;
 }[] = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    onClick: (router: ReturnType<typeof useRouter>) =>
+      router.push("/home-page"),
+  },
   {
     text: "Search through your jobs",
     icon: <SearchIcon />,
@@ -155,8 +162,9 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
                 icon={item.icon}
                 isActive={
                   activeIndex === index ||
-                  (pathname === "/home-page/dashboard" && index === 1) ||
-                  (pathname === "/home-page/job-board" && index === 2)
+                  (pathname === "/home-page" && index === 0) ||
+                  (pathname === "/home-page/dashboard" && index === 2) ||
+                  (pathname === "/home-page/job-board" && index === 3)
                 }
                 onClick={() => handleTopSidebarItemClick(index)}
               />
