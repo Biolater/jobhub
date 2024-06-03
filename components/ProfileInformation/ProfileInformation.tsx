@@ -8,8 +8,19 @@ const ProfileInformation: FC<{
   bio: string;
   email: string;
   joinDate: string;
+  location: string | null;
+  portfolioUrl: string | null;
   handleModalOpen: () => void;
-}> = ({ profileImage, username, bio, email, joinDate, handleModalOpen }) => {
+}> = ({
+  profileImage,
+  username,
+  bio,
+  email,
+  joinDate,
+  location,
+  portfolioUrl,
+  handleModalOpen,
+}) => {
   const EDIT_BUTTON_VARIANTS = {
     whileHover: {
       scale: 1.065,
@@ -55,7 +66,12 @@ const ProfileInformation: FC<{
         {username}
       </p>
       <p className="bio mb-2 sm:mb-3 text-whitish sm:text-lg">{bio}</p>
-      <ProfileDetails joinDate={joinDate} email={email} />
+      <ProfileDetails
+        location={location}
+        portfolioUrl={portfolioUrl}
+        joinDate={joinDate}
+        email={email}
+      />
     </div>
   );
 };

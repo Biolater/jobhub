@@ -1,9 +1,9 @@
-import React from "react";
+import { FC } from "react";
 
-const LinkIcon = () => {
+const LinkIcon: FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-m9simb"
+      className={className}
       focusable="false"
       aria-hidden="true"
       viewBox="0 0 24 24"

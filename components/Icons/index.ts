@@ -13,6 +13,8 @@ import MailIcon from "./MailIcon";
 import BirthdayCakeIcon from "./BirthdayCakeIcon";
 import LoadingButtonIcon from "./LoadingButtonIcon";
 import HomeIcon from "./HomeIcon";
+import LinkIcon from "./LinkIcon";
+import LocationIcon from "./LocationIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -28,5 +30,7 @@ export {
   MailIcon,
   BirthdayCakeIcon,
   LoadingButtonIcon,
-  HomeIcon
+  HomeIcon,
+  LinkIcon,
+  LocationIcon,
 };

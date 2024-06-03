@@ -86,6 +86,8 @@ const MyProfile = () => {
             joinDate={userDetails.joinDate}
             profileImage={userDetails.profilePic}
             username={userDetails.username}
+            portfolioUrl={userDetails.portfolioUrl}
+            location={userDetails.location}
           />
         </div>
       )}
