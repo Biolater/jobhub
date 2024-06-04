@@ -26,7 +26,7 @@ const ProfileDetails: FC<{
     location && {
       icon: <LocationIcon className="fill-whitish/60" />,
       title: "Location",
-      value: "Tehran, Iran",
+      value: location,
     },
     portfolioUrl && {
       icon: <LinkIcon className="fill-whitish/60" />,

@@ -13,6 +13,8 @@ import ProfileBanner from "./ProfileBanner/ProfileBanner";
 import ProfileInformation from "./ProfileInformation/ProfileInformation";
 import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
 import EditProfileModal from "./EditProfileModal.tsx/EditProfileModal";
+import JobBoardItem from "./JobBoard/JobBoardItem";
+import JobBoardItemSkeleton from "./JobBoard/JobBoardItemSkeleton";
 export {
   Navbar,
   AddJobModal,
@@ -29,4 +31,6 @@ export {
   ProfileInformation,
   LoadingSpinner,
   EditProfileModal,
+  JobBoardItem,
+  JobBoardItemSkeleton,
 };
