@@ -15,6 +15,7 @@ import LoadingSpinner from "./LoadingSpinner/LoadingSpinner";
 import EditProfileModal from "./EditProfileModal.tsx/EditProfileModal";
 import JobBoardItem from "./JobBoard/JobBoardItem";
 import JobBoardItemSkeleton from "./JobBoard/JobBoardItemSkeleton";
+import JobBoardSearchBar from "./JobBoard/JobBoardSearchBar";
 export {
   Navbar,
   AddJobModal,
@@ -33,4 +34,5 @@ export {
   EditProfileModal,
   JobBoardItem,
   JobBoardItemSkeleton,
+  JobBoardSearchBar,
 };

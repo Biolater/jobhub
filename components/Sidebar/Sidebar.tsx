@@ -26,7 +26,7 @@ const TOP_SIDEBAR_ITEMS = (router: ReturnType<typeof useRouter>) => [
   },
   {
     text: "Search through your jobs",
-    icon: <SearchIcon />,
+    icon: <SearchIcon className="fill-whitish" />,
     onClick: () => router.push("/home-page"),
   },
   {

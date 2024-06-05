@@ -1,5 +1,5 @@
 "use client";
-import { JobBoardItem, JobBoardItemSkeleton } from "@/components/index";
+import { JobBoardItem, JobBoardItemSkeleton, JobBoardSearchBar } from "@/components/index";
 import { useState, useEffect } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 const JobBoard = () => {
@@ -345,6 +345,7 @@ const JobBoard = () => {
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
         Welcome to the Job Board
       </h1>
+      <JobBoardSearchBar />
       <div className="jobBoard__items flex flex-col gap-4">
         {loading &&
           Array.from({ length: 10 }).map((_, index: number) => (

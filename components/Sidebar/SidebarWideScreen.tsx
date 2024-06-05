@@ -31,7 +31,7 @@ const TOP_SIDEBAR_ITEMS: {
   },
   {
     text: "Search through your jobs",
-    icon: <SearchIcon />,
+    icon: <SearchIcon className="fill-whitish" />,
     testId: "sidebarWideScreen__searchButton",
     onClick: (router: ReturnType<typeof useRouter>) =>
       router.push("/home-page"),

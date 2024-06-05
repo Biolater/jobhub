@@ -85,7 +85,7 @@ const SidebarSearchBar: FC<{
         placeholder="Search..."
       />
       <div className="searchBar__icon size-[29px]">
-        <SearchIcon />
+        <SearchIcon className="fill-whitish" />
       </div>
     </motion.div>
   );
