@@ -1,10 +1,18 @@
 "use client";
-import { JobBoardItem, JobBoardItemSkeleton, JobBoardSearchBar } from "@/components/index";
+import {
+  JobBoardItem,
+  JobBoardItemSkeleton,
+  JobBoardSearchBar,
+} from "@/components/index";
 import { useState, useEffect } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 const JobBoard = () => {
   const [jobResults, setJobResults] = useState<JobBoardItemTypes[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchbarValue, setSearchbarValue] = useState<string>("");
+  const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
+  const encodedSearchText = encodeURIComponent(searchbarValue);
+  const url = `${baseUrl}${encodedSearchText}`;
   const mockData = [
     {
       job_id: "w5t3eq9SKhtEK-kGAAAAAA==",
@@ -340,12 +348,36 @@ const JobBoard = () => {
       setLoading(false);
     }, 2500);
   }, []);
+  const fetchJobs = async () => {
+    const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
+    const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
+    const options = {
+      method: "GET",
+      headers: {
+        "x-rapidapi-key": rapidApiKey || "",
+        "x-rapidapi-host": rapidApiHost || "",
+      },
+    };
+    try {
+      setLoading(true);
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setJobResults(result?.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <main className="jobBoard p-4">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
         Welcome to the Job Board
       </h1>
-      <JobBoardSearchBar />
+      <JobBoardSearchBar
+        onSearch={fetchJobs}
+        searchBarValue={searchbarValue}
+        onSearchbarChange={(value: string) => setSearchbarValue(value)}
+      />
       <div className="jobBoard__items flex flex-col gap-4">
         {loading &&
           Array.from({ length: 10 }).map((_, index: number) => (
