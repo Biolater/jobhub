@@ -35,9 +35,11 @@ const JobBoardItem: FC<{
             <strong>{job_title}</strong>
           </p>
           <p className="company__name">{employer_name}</p>
-          <p className="job__location">
-            {job_city}, {job_state}
-          </p>
+          {job_city && job_state && (
+            <p className="job__location">
+              {job_city}, {job_state}
+            </p>
+          )}
         </div>
       </div>
     </Link>

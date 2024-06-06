@@ -6,6 +6,7 @@ import {
 } from "@/components/index";
 import { useState, useEffect } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
+import toast from "react-hot-toast";
 const JobBoard = () => {
   const [jobResults, setJobResults] = useState<JobBoardItemTypes[]>([]);
   const [loading, setLoading] = useState(true);
@@ -351,8 +352,6 @@ const JobBoard = () => {
   const fetchJobs = async () => {
     const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
     const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
-    console.log(rapidApiKey)
-    console.log(rapidApiHost)
     const options = {
       method: "GET",
       headers: {
@@ -364,18 +363,23 @@ const JobBoard = () => {
       setLoading(true);
       const response = await fetch(url, options);
       const result = await response.json();
+      if(result.status === "ERROR"){
+        throw new Error(result.error.message)
+      }
       setJobResults(result?.data);
       setLoading(false);
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      setLoading(false);
+      toast.error(err.message)
     }
   };
   return (
-    <main className="jobBoard p-4">
+    <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
         Welcome to the Job Board
       </h1>
       <JobBoardSearchBar
+        loading={loading}
         onSearch={fetchJobs}
         searchBarValue={searchbarValue}
         onSearchbarChange={(value: string) => setSearchbarValue(value)}
@@ -385,7 +389,7 @@ const JobBoard = () => {
           Array.from({ length: 10 }).map((_, index: number) => (
             <JobBoardItemSkeleton key={index} />
           ))}
-        {!loading &&
+        {!loading && jobResults?.length > 0 &&
           jobResults.map((job: JobBoardItemTypes, index: number) => (
             // @ts-ignore
             <JobBoardItem

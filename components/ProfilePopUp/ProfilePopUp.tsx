@@ -134,7 +134,7 @@ const ProfilePopUp: FC<{
       initial="inital"
       animate="animate"
       exit="exit"
-      className="profilePopUp shadow-lg p-4 z-[5] right-5 md:right-0 flex flex-col gap-4  items-center top-[66px] absolute bg-zephyr rounded-xl max-w-[300px]"
+      className="profilePopUp shadow-lg p-4 z-[5] right-5 flex flex-col gap-4  items-center top-[66px] absolute bg-zephyr rounded-xl max-w-[300px]"
     >
       <div className="profilePicture">
         {userDetails.profilePic && (
