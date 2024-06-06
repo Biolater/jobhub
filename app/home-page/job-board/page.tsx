@@ -351,6 +351,8 @@ const JobBoard = () => {
   const fetchJobs = async () => {
     const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
     const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
+    console.log(rapidApiKey)
+    console.log(rapidApiHost)
     const options = {
       method: "GET",
       headers: {
