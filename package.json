@@ -22,6 +22,7 @@
     "@nextui-org/theme": "^2.2.4",
     "@nextui-org/tooltip": "^2.0.33",
     "@reduxjs/toolkit": "^2.2.5",
+    "@uploadcare/react-uploader": "^0.5.3",
     "aws-amplify": "^6.3.0",
     "aws-cdk-lib": "^2.143.1",
     "constructs": "^10.3.0",

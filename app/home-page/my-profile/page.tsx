@@ -8,13 +8,25 @@ import {
 } from "@/components/index";
 import { useAuth, UserDetailsType } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import '@uploadcare/react-uploader/core.css';
 
-export type UserDetailsKeys = "email" | "username" | "profilePic" | "bio" | "portfolioUrl" | "location";
+
+export type UserDetailsKeys =
+  | "email"
+  | "username"
+  | "profilePic"
+  | "bio"
+  | "portfolioUrl"
+  | "location";
 
 const MyProfile = () => {
   const { userDetails, userDetailsLoading, userId } = useAuth();
-  const [userDetailsCopy, setUserDetailsCopy] = useState<UserDetailsType>(userDetails);
-  const [changedDetails, setChangedDetails] = useState<Partial<Record<UserDetailsKeys, string>>>({});
+  const [userDetailsCopy, setUserDetailsCopy] = useState<UserDetailsType>(
+    userDetails
+  );
+  const [changedDetails, setChangedDetails] = useState<
+    Partial<Record<UserDetailsKeys, string>>
+  >({});
   const [profileEditInputChanged, setProfileEditInputChanged] = useState(false);
   const [showModal, setShowModal] = useState(false);
 

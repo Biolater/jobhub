@@ -405,6 +405,9 @@ const JobBoard = () => {
               job_title={job.job_title}
             />
           ))}
+          {
+            jobResults?.length === 0 && !loading && <div className="text-center text-2xl my-2 text-whitish">No results found</div>
+          }
       </div>
     </main>
   );

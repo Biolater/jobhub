@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.fileUploaderWrapper lr-file-uploader-regular {
+  --darkmode: 1
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -113,19 +117,19 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -200px; 
+  left: -200px;
   width: 56px;
   height: 100%;
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
   animation: shimmer-image 2s infinite linear;
 }
 
-.skeleton-content p{
+.skeleton-content p {
   position: relative;
   overflow: hidden;
 }
 
-.skeleton-content p::after{
+.skeleton-content p::after {
   content: '';
   position: absolute;
   top: 0;
@@ -140,6 +144,7 @@
   0% {
     left: -200px;
   }
+
   100% {
     left: 100%;
   }
@@ -148,12 +153,12 @@
 
 @keyframes shimmer {
   0% {
-    left: -200px; /* Start position */
+    left: -200px;
+    /* Start position */
   }
+
   100% {
-    left: 100%; /* End position */
+    left: 100%;
+    /* End position */
   }
 }
-
-
-

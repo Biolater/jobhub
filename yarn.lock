@@ -6807,6 +6807,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@symbiotejs/symbiote@^1.11.7":
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/@symbiotejs/symbiote/-/symbiote-1.11.7.tgz#78a9f415d17ec3b3546de1706e464d4d72e55510"
+  integrity sha512-fUOJwzuldeApJ533YeTdrfnpp4nsA+ss1eiNBodX7RHf4LnhPB2Z9HP4fF3m2YhKYnxK0whjXaKA+wrxTRP5qA==
+
 "@testing-library/dom@^10.0.0":
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-10.1.0.tgz#2d073e49771ad614da999ca48f199919e5176fb6"
@@ -7086,6 +7091,41 @@
   integrity sha512-VSLn7rs46Qhe4gYxbK1/IB4NPLvgKl0I6SgeVyJwW5efYAELvDVqf1gVOG7JaKtW8qlMtBaZP02/4TRN39AkEQ==
   dependencies:
     debug "^4.1.1"
+
+"@uploadcare/blocks@^0.39.1":
+  version "0.39.1"
+  resolved "https://registry.yarnpkg.com/@uploadcare/blocks/-/blocks-0.39.1.tgz#0a9ea1d2168e2bac0ba6632e27306c5786037907"
+  integrity sha512-WdjlUYCeuaju83ImELIVsrLlZpi6IIWidnh+/LfIiX8ht1KJGH9DgK7ekoUyWxjE8ggwnPNIz4xnMKmIGlow7w==
+  dependencies:
+    "@symbiotejs/symbiote" "^1.11.7"
+    "@uploadcare/image-shrink" "^6.14.1"
+    "@uploadcare/upload-client" "^6.14.1"
+
+"@uploadcare/image-shrink@^6.14.1":
+  version "6.14.1"
+  resolved "https://registry.yarnpkg.com/@uploadcare/image-shrink/-/image-shrink-6.14.1.tgz#6153d7cd6e45997b2022d369935adf0a4cf433c3"
+  integrity sha512-r3uu+9xsgqNqL5hvBya7RDDQVPMpTF12C1MRN80O1H6ITVvWLfngtmUbP44qg7YhAraLoynDJlkmHMiHanCw0w==
+
+"@uploadcare/react-adapter@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@uploadcare/react-adapter/-/react-adapter-0.3.0.tgz#459c5f54b3b096f6b01c3b3ce17abe0393eecd0e"
+  integrity sha512-XQLPAERn47XC9srFH3HeQpywyInSaJ6JFDKD5XNvaSL5y2KF3MZerwMHsc/brAOLDQox7lLjzPXzrwlWlcMVqw==
+
+"@uploadcare/react-uploader@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@uploadcare/react-uploader/-/react-uploader-0.5.3.tgz#5a4b1578c89b739c363c485996cafa6c6ae3e75d"
+  integrity sha512-fvrYxjtmygPQxsm0u5Wvq/0ZUu+9Izt863jEy8MB/1ZY1aCeEgtmhp08X53Ret7AhPj4ImhoPKGdBHITNWh1XA==
+  dependencies:
+    "@uploadcare/blocks" "^0.39.1"
+    "@uploadcare/react-adapter" "^0.3.0"
+
+"@uploadcare/upload-client@^6.14.1":
+  version "6.14.1"
+  resolved "https://registry.yarnpkg.com/@uploadcare/upload-client/-/upload-client-6.14.1.tgz#1fedc2659a471e7ba2c4977435ad55e54a9e026d"
+  integrity sha512-GvXLq6GGyXHjq7tebfv3IqHFpMzuOSuNPOhwCcNPquUbwoAlTEFPLjB2Ir/EZUuCtTWowluLjo4LPDQwvHbqyA==
+  dependencies:
+    form-data "^4.0.0"
+    ws "^8.2.3"
 
 "@whatwg-node/events@^0.1.0":
   version "0.1.1"
@@ -12943,6 +12983,7 @@ wordwrap@^1.0.0:
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -12982,7 +13023,7 @@ write-file-atomic@^4.0.2:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-ws@^8.11.0:
+ws@^8.11.0, ws@^8.2.3:
   version "8.17.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.17.0.tgz#d145d18eca2ed25aaf791a183903f7be5e295fea"
   integrity sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==
