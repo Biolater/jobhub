@@ -143,7 +143,8 @@ const ProfilePopUp: FC<{
             src={userDetails.profilePic}
             height={80}
             alt="profile picture"
-            className=" rounded-full"
+            quality={100}
+            className="rounded-full h-20 object-cover"
           />
         )}
       </div>

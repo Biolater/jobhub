@@ -6,32 +6,41 @@ import {
 } from "@uploadcare/react-uploader";
 import toast from "react-hot-toast";
 import { generateClient } from "aws-amplify/api";
-import { type Schema } from "@/amplify/data/resource";
+import { Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
 const ProfileBanner: FC<{ bannerUrl: string | null }> = ({ bannerUrl }) => {
   const client = generateClient<Schema>();
   const { userId } = useAuth();
   const handleProfileBannerUpdate = async () => {
-    try{
-      const { data, errors } = await client.models.User.update({
-        id: userId,
-        profileBanner: uploadedBannerUrl,
-      },{
-        authMode: "userPool",
-      });
-      if(errors){
+    try {
+      const { data, errors } = await client.models.User.update(
+        {
+          id: userId,
+          profileBanner: uploadedBannerUrl,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+      if (errors) {
         throw new Error(errors[0].message);
-      }else if(data){
+      } else if (data) {
         toast.success("Profile banner uploaded successfully");
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
       }
-    }catch(err: unknown){
+    } catch (err) {
       toast.error("Error updating profile banner");
     }
-  }
+  };
   const [uploadedBannerUrl, setUploadedBannerUrl] = useState("");
   const bannerStyle = {
-    backgroundImage: `url(${bannerUrl ? bannerUrl : "https://robertmarshall.dev/static/d71528d312b579dd0449078f8a8f56ab/b5380/reactjs-1.png"})`,
+    backgroundImage: `url(${
+      bannerUrl
+        ? bannerUrl
+        : "https://robertmarshall.dev/static/d71528d312b579dd0449078f8a8f56ab/b5380/reactjs-1.png"
+    })`,
     height: "100%",
     width: "100%",
     backgroundPosition: "center",

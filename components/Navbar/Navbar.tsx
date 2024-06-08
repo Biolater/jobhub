@@ -100,9 +100,10 @@ const Navbar: FC<{ onMenuOpen: () => void }> = ({ onMenuOpen }) => {
                   <Image
                     width={36}
                     height={36}
+                    quality={100}
                     src={userDetails.profilePic}
                     alt="profile image"
-                    className="rounded-full"
+                    className="rounded-full h-9 object-cover"
                   />
                 )}
               </button>

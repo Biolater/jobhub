@@ -131,11 +131,12 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
                 <div className="userProfile__pic size-[40px]">
                   {userDetails.profilePic && (
                     <Image
+                      quality={100}
                       alt="profile picture"
                       src={userDetails.profilePic}
                       width={40}
                       height={40}
-                      className=" rounded-full"
+                      className="rounded-full h-10 object-cover"
                     />
                   )}
                 </div>

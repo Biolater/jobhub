@@ -61,7 +61,7 @@ const SIDEBAR_INNER_VARIANTS = {
 const SIDEBAR_CONTENT_VARIANTS = {
   initial: { width: 0 },
   animate: { width: 320 },
-  exit: { width: 0 },
+  exit: { width: 0, paddingLeft: 0, paddingRight: 0 },
 };
 
 const Sidebar: FC<{
@@ -137,7 +137,7 @@ const Sidebar: FC<{
     <motion.div
       data-testid="sidebar"
       onClick={handleOutsideClick}
-      className="sidebar__overlay sm:hidden z-50 h-screen fixed top-0 left-0 bottom-0 w-full"
+      className="sidebar__overlay sm:hidden z-50 h-svh fixed top-0 left-0 bottom-0 w-full"
     >
       <motion.div
         ref={sidebarRef}
@@ -161,11 +161,12 @@ const Sidebar: FC<{
                   <div className="userProfile__pic">
                     {userDetails?.profilePic && (
                       <Image
+                        quality={100}
                         alt="profile picture"
                         src={userDetails.profilePic}
                         width={40}
                         height={40}
-                        className=" rounded-full"
+                        className="rounded-full object-cover h-10"
                       />
                     )}
                   </div>

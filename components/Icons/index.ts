@@ -15,6 +15,7 @@ import LoadingButtonIcon from "./LoadingButtonIcon";
 import HomeIcon from "./HomeIcon";
 import LinkIcon from "./LinkIcon";
 import LocationIcon from "./LocationIcon";
+import EditIcon from "./EditIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -33,4 +34,5 @@ export {
   HomeIcon,
   LinkIcon,
   LocationIcon,
+  EditIcon,
 };
