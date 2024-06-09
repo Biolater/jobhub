@@ -372,6 +372,7 @@ const JobBoard = () => {
         "x-rapidapi-host": rapidApiHost || "",
       },
     };
+
     try {
       setLoading(true);
       const response = await fetch(url, options);
@@ -383,9 +384,15 @@ const JobBoard = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      toast.error(err.message);
+
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
+
   return (
     <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
