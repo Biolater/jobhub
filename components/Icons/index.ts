@@ -16,6 +16,7 @@ import HomeIcon from "./HomeIcon";
 import LinkIcon from "./LinkIcon";
 import LocationIcon from "./LocationIcon";
 import EditIcon from "./EditIcon";
+import ChevronBottomIcon from "./ChevronBottomIcon";
 export {
   AddIcon,
   NoJobIcon,
@@ -35,4 +36,5 @@ export {
   LinkIcon,
   LocationIcon,
   EditIcon,
+  ChevronBottomIcon,
 };

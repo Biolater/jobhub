@@ -16,6 +16,7 @@ import EditProfileModal from "./EditProfileModal.tsx/EditProfileModal";
 import JobBoardItem from "./JobBoard/JobBoardItem";
 import JobBoardItemSkeleton from "./JobBoard/JobBoardItemSkeleton";
 import JobBoardSearchBar from "./JobBoard/JobBoardSearchBar";
+import JobBoardFilterDropdown from "./JobBoard/JobBoardFilterDropdown";
 export {
   Navbar,
   AddJobModal,
@@ -35,4 +36,5 @@ export {
   JobBoardItem,
   JobBoardItemSkeleton,
   JobBoardSearchBar,
+  JobBoardFilterDropdown,
 };

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import HomePageLayout from "@/app/home-page/layout";
 import resizeWindow from "@/lib/resizeWindow";
 
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: jest.fn(),
   }),

@@ -3,8 +3,9 @@ import {
   JobBoardItem,
   JobBoardItemSkeleton,
   JobBoardSearchBar,
+  JobBoardFilterDropdown,
 } from "@/components/index";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 import toast from "react-hot-toast";
 const JobBoard = () => {
@@ -13,7 +14,14 @@ const JobBoard = () => {
   const [searchbarValue, setSearchbarValue] = useState<string>("");
   const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
   const encodedSearchText = encodeURIComponent(searchbarValue);
-  const url = `${baseUrl}${encodedSearchText}`;
+  const filterOptions = [
+    {
+      title: "Date posted",
+      options: ["Today", "Last 3 days", "Last 7 days", "Last 30 days"],
+    },
+  ];
+  const num_pages = useRef(1);
+  const url = `${baseUrl}${encodedSearchText}&num_pages=${num_pages.current}`;
   const mockData = [
     {
       job_id: "w5t3eq9SKhtEK-kGAAAAAA==",
@@ -349,6 +357,11 @@ const JobBoard = () => {
       setLoading(false);
     }, 2500);
   }, []);
+  const handleLoadMore = () => {
+    setLoading(true);
+    num_pages.current += 1;
+    fetchJobs();
+  };
   const fetchJobs = async () => {
     const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
     const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
@@ -363,14 +376,14 @@ const JobBoard = () => {
       setLoading(true);
       const response = await fetch(url, options);
       const result = await response.json();
-      if(result.status === "ERROR"){
-        throw new Error(result.error.message)
+      if (result.status === "ERROR") {
+        throw new Error(result.error.message);
       }
       setJobResults(result?.data);
       setLoading(false);
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err.message)
+      toast.error(err.message);
     }
   };
   return (
@@ -384,12 +397,18 @@ const JobBoard = () => {
         searchBarValue={searchbarValue}
         onSearchbarChange={(value: string) => setSearchbarValue(value)}
       />
+      <div className="filter-options flex items-center gap-2 mb-4">
+        {filterOptions.map((filterOption, idx) => (
+          <JobBoardFilterDropdown title={filterOption.title} />
+        ))}
+      </div>
       <div className="jobBoard__items flex flex-col gap-4">
         {loading &&
           Array.from({ length: 10 }).map((_, index: number) => (
             <JobBoardItemSkeleton key={index} />
           ))}
-        {!loading && jobResults?.length > 0 &&
+        {!loading &&
+          jobResults?.length > 0 &&
           jobResults.map((job: JobBoardItemTypes, index: number) => (
             // @ts-ignore
             <JobBoardItem
@@ -405,10 +424,22 @@ const JobBoard = () => {
               job_title={job.job_title}
             />
           ))}
-          {
-            jobResults?.length === 0 && !loading && <div className="text-center text-2xl my-2 text-whitish">No results found</div>
-          }
+        {jobResults?.length === 0 && !loading && (
+          <div className="text-center text-2xl my-2 text-whitish">
+            No results found
+          </div>
+        )}
       </div>
+      {!loading && jobResults?.length >= 10 && (
+        <div className="loadMoreButton flex items-center justify-center mt-4">
+          <button
+            onClick={handleLoadMore}
+            className="bg-secondary transition-all duration-200 hover:scale-105 active:scale-90 p-2 rounded-lg font-medium text-whitish"
+          >
+            Load more
+          </button>
+        </div>
+      )}
     </main>
   );
 };
