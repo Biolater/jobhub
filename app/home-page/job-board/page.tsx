@@ -11,15 +11,22 @@ import toast from "react-hot-toast";
 const JobBoard = () => {
   const [jobResults, setJobResults] = useState<JobBoardItemTypes[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchbarValue, setSearchbarValue] = useState<string>("");
+  const [searchbarValue, setSearchbarValue] = useState("");
+  const [activeJobFilterTitle, setActiveJobFilterTitle] = useState("");
   const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
   const encodedSearchText = encodeURIComponent(searchbarValue);
   const filterOptions = [
     {
       title: "Date posted",
-      options: ["Today", "Last 3 days", "Last 7 days", "Last 30 days"],
+      values: ["Today", "Last 3 days", "Last 7 days", "Last 30 days"],
     },
   ];
+  const handleFilterButtonClick = (title: string) => {
+    setActiveJobFilterTitle((prev) => (prev === title ? "" : title));
+  };
+  const handleFilterButtonClose = () => {
+    setActiveJobFilterTitle("");
+  };
   const num_pages = useRef(1);
   const url = `${baseUrl}${encodedSearchText}&num_pages=${num_pages.current}`;
   const mockData = [
@@ -392,7 +399,6 @@ const JobBoard = () => {
       }
     }
   };
-
   return (
     <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
@@ -406,7 +412,14 @@ const JobBoard = () => {
       />
       <div className="filter-options flex items-center gap-2 mb-4">
         {filterOptions.map((filterOption, idx) => (
-          <JobBoardFilterDropdown title={filterOption.title} />
+          <JobBoardFilterDropdown
+            onSelect={() => handleFilterButtonClick(filterOption.title)}
+            onClose={handleFilterButtonClose}
+            valuesActive={activeJobFilterTitle === filterOption.title}
+            title={filterOption.title}
+            key={idx}
+            values={filterOption.values}
+          />
         ))}
       </div>
       <div className="jobBoard__items flex flex-col gap-4">
