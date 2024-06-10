@@ -8,11 +8,18 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 import toast from "react-hot-toast";
+type SelectedFilterOption = {
+  filterName: string;
+  filterValue: string;
+};
 const JobBoard = () => {
   const [jobResults, setJobResults] = useState<JobBoardItemTypes[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchbarValue, setSearchbarValue] = useState("");
   const [activeJobFilterTitle, setActiveJobFilterTitle] = useState("");
+  const [selectedFilterOptions, setSelectedFilterOptions] = useState<
+    SelectedFilterOption[]
+  >([]);
   const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
   const encodedSearchText = encodeURIComponent(searchbarValue);
   const filterOptions = [
@@ -24,7 +31,24 @@ const JobBoard = () => {
       title: "Remote",
       values: ["Yes", "No"],
     },
+    {
+      title: "Actively hiring",
+      values: ["Yes", "No"],
+    },
   ];
+
+  const handleFilterOptionClick = (
+    title: string,
+    value: string,
+    idx: number
+  ) => {
+    setSelectedFilterOptions((prev) => [...prev, { filterName: title, filterValue: value }]);
+  };
+
+  useEffect(() => {
+    console.log(selectedFilterOptions);
+  }, [selectedFilterOptions]);
+
   const handleFilterButtonClick = (title: string) => {
     setActiveJobFilterTitle((prev) => (prev === title ? "" : title));
   };
@@ -414,9 +438,12 @@ const JobBoard = () => {
         searchBarValue={searchbarValue}
         onSearchbarChange={(value: string) => setSearchbarValue(value)}
       />
-      <div className="filter-options flex items-center gap-2 mb-4">
+      <div className="filter-options flex flex-wrap items-center gap-2 mb-4">
         {filterOptions.map((filterOption, idx) => (
           <JobBoardFilterDropdown
+            onFilterValueClick={(title, value) =>
+              handleFilterOptionClick(title, value, idx)
+            }
             onSelect={() => handleFilterButtonClick(filterOption.title)}
             onClose={handleFilterButtonClose}
             valuesActive={activeJobFilterTitle === filterOption.title}

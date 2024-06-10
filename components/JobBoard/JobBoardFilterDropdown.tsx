@@ -15,7 +15,15 @@ const JobBoardFilterDropdown: FC<{
   valuesActive: boolean;
   onSelect: () => void;
   onClose: () => void;
-}> = ({ title, values, valuesActive, onSelect, onClose }) => {
+  onFilterValueClick: (title: string, value: string) => void;
+}> = ({
+  title,
+  values,
+  valuesActive,
+  onSelect,
+  onClose,
+  onFilterValueClick,
+}) => {
   const filterButtonRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -60,10 +68,11 @@ const JobBoardFilterDropdown: FC<{
             initial="initial"
             animate="animate"
             exit="exit"
-            className="filter-option__values absolute min-w-[200px] text-start rounded-lg top-11 bg-whitish text-primary text-sm font-medium left-0"
+            className="filter-option__values z-10 absolute min-w-[200px] text-start rounded-lg top-11 bg-whitish text-primary text-sm font-medium left-0"
           >
             {values?.map((value, index) => (
               <div
+                onClick={() => onFilterValueClick(title, value)}
                 key={index}
                 className={`filter-option__value cursor-pointer hover:bg-white/60 ${index ===
                   0 && "rounded-t-lg"} ${index === values.length - 1 &&
