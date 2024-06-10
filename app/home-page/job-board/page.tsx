@@ -20,6 +20,10 @@ const JobBoard = () => {
       title: "Date posted",
       values: ["Today", "Last 3 days", "Last 7 days", "Last 30 days"],
     },
+    {
+      title: "Remote",
+      values: ["Yes", "No"],
+    },
   ];
   const handleFilterButtonClick = (title: string) => {
     setActiveJobFilterTitle((prev) => (prev === title ? "" : title));

@@ -16,7 +16,7 @@ const JobBoardFilterDropdown: FC<{
   onSelect: () => void;
   onClose: () => void;
 }> = ({ title, values, valuesActive, onSelect, onClose }) => {
-  const filterButtonRef = useRef<HTMLButtonElement>(null);
+  const filterButtonRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -38,18 +38,21 @@ const JobBoardFilterDropdown: FC<{
       }
     };
     document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, []);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [onClose]);
   return (
-    <button
-      ref={filterButtonRef}
-      onClick={onSelect}
-      className="filter-option relative hover:bg-whitish/80 focus:ring-2 ring-offset-2 ring-offset-primary flex items-center gap-2 p-2 rounded-lg bg-whitish text-primary text-sm font-medium"
-    >
-      {title}
-      <span className="filter-option__icon size-4">
-        <ChevronBottomIcon className="w-full h-full" />
-      </span>
+    <div ref={filterButtonRef} className="filter-option__container relative">
+      <button
+        onClick={onSelect}
+        className="filter-option active:scale-90 transition-all duration-200 hover:bg-whitish/80 focus:ring-2 ring-offset-2 ring-offset-primary flex items-center gap-2 p-2 rounded-lg bg-whitish text-primary text-sm font-medium"
+      >
+        {title}
+        <span className="filter-option__icon size-4">
+          <ChevronBottomIcon className="w-full h-full" />
+        </span>
+      </button>
       <AnimatePresence>
         {valuesActive && (
           <motion.div
@@ -57,12 +60,12 @@ const JobBoardFilterDropdown: FC<{
             initial="initial"
             animate="animate"
             exit="exit"
-            className="filter-option__values absolute shadow-2xl min-w-[200px] text-start rounded-lg top-10 bg-whitish text-primary text-sm font-medium left-0"
+            className="filter-option__values absolute min-w-[200px] text-start rounded-lg top-11 bg-whitish text-primary text-sm font-medium left-0"
           >
             {values?.map((value, index) => (
               <div
                 key={index}
-                className={`filter-option__value hover:bg-white/60 ${index ===
+                className={`filter-option__value cursor-pointer hover:bg-white/60 ${index ===
                   0 && "rounded-t-lg"} ${index === values.length - 1 &&
                   "rounded-b-lg"}   p-2`}
               >
@@ -72,7 +75,7 @@ const JobBoardFilterDropdown: FC<{
           </motion.div>
         )}
       </AnimatePresence>
-    </button>
+    </div>
   );
 };
 
