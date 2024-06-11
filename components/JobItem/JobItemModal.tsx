@@ -127,7 +127,7 @@ const JobItemModal: FC<JobItemModalProps> = ({
             whileTap={{ scale: 0.9 }}
             onClick={handleCancel}
           >
-            <CloseIcon />
+            <CloseIcon className="fill-whitish size-[14px]" />
           </motion.button>
         </header>
         <main className="jobDetails__body max-h-[calc(100svh-180px)] overflow-auto p-4 text-whitish">

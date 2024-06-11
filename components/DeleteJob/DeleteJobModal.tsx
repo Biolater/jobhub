@@ -135,7 +135,7 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
             whileTap={"whileTap"}
             className="deleteJobModal__closeBtn"
           >
-            <CloseIcon />
+            <CloseIcon className="size-[14px] fill-whitish" />
           </motion.button>
         </header>
         <main className="deleteJobModal__main text-whitish p-4">

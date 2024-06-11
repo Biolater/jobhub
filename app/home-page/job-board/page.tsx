@@ -5,7 +5,7 @@ import {
   JobBoardSearchBar,
   JobBoardFilterDropdown,
 } from "@/components/index";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 import toast from "react-hot-toast";
 type SelectedFilterOption = {
@@ -17,6 +17,10 @@ const JobBoard = () => {
   const [loading, setLoading] = useState(true);
   const [searchbarValue, setSearchbarValue] = useState("");
   const [activeJobFilterTitle, setActiveJobFilterTitle] = useState("");
+  const [datePosted, setDatePosted] = useState("all");
+  const [numPage, setNumPage] = useState(1);
+  const [onlyRemote, setOnlyRemote] = useState("false");
+  const [activelyHiring, setActivelyHiring] = useState("false");
   const [selectedFilterOptions, setSelectedFilterOptions] = useState<
     SelectedFilterOption[]
   >([]);
@@ -26,14 +30,17 @@ const JobBoard = () => {
     {
       title: "Date posted",
       values: ["Today", "Last 3 days", "Last 7 days", "Last 30 days"],
+      realValues: ["today", "3days", "week", "month"],
     },
     {
       title: "Remote",
       values: ["Yes", "No"],
+      realValues: ["true", "false"],
     },
     {
       title: "Actively hiring",
       values: ["Yes", "No"],
+      realValues: ["true", "false"],
     },
   ];
 
@@ -42,7 +49,29 @@ const JobBoard = () => {
     value: string,
     idx: number
   ) => {
-    setSelectedFilterOptions((prev) => [...prev, { filterName: title, filterValue: value }]);
+    const clickedOption = filterOptions[idx];
+    const clickedValueIndex = clickedOption.values.indexOf(value);
+    const realValue = clickedOption.realValues[clickedValueIndex];
+    if (idx === 0) {
+      setDatePosted(realValue);
+    } else if (idx === 1) {
+      setOnlyRemote(realValue);
+    } else {
+      setActivelyHiring(realValue);
+    }
+    setSelectedFilterOptions((prev) => {
+      const prevArray = [...prev];
+      prevArray[idx] = {
+        filterName: title,
+        filterValue: value,
+      };
+      return prevArray;
+    });
+  };
+
+  const handleFilterRemove = (idx: number) => {
+    setSelectedFilterOptions((prev) => prev.filter((_, i) => i !== idx));
+    setActiveJobFilterTitle("");
   };
 
   useEffect(() => {
@@ -55,8 +84,6 @@ const JobBoard = () => {
   const handleFilterButtonClose = () => {
     setActiveJobFilterTitle("");
   };
-  const num_pages = useRef(1);
-  const url = `${baseUrl}${encodedSearchText}&num_pages=${num_pages.current}`;
   const mockData = [
     {
       job_id: "w5t3eq9SKhtEK-kGAAAAAA==",
@@ -393,13 +420,12 @@ const JobBoard = () => {
     }, 2500);
   }, []);
   const handleLoadMore = () => {
-    setLoading(true);
-    num_pages.current += 1;
-    fetchJobs();
+    setNumPage((prevNumPage) => prevNumPage + 1);
   };
   const fetchJobs = async () => {
     const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
     const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
+    const url = `${baseUrl}${encodedSearchText}&num_pages=${numPage}&date_posted=${datePosted}&remote_jobs_only=${onlyRemote}&actively_hiring=${activelyHiring}`;
     const options = {
       method: "GET",
       headers: {
@@ -427,6 +453,12 @@ const JobBoard = () => {
       }
     }
   };
+  useEffect(() => {
+    if (numPage !== 1) fetchJobs();
+  }, [numPage]);
+  useEffect(() => {
+      fetchJobs();
+  }, [datePosted, onlyRemote, activelyHiring])
   return (
     <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
@@ -441,6 +473,11 @@ const JobBoard = () => {
       <div className="filter-options flex flex-wrap items-center gap-2 mb-4">
         {filterOptions.map((filterOption, idx) => (
           <JobBoardFilterDropdown
+            onFilterRemove={() => handleFilterRemove(idx)}
+            selectedValue={selectedFilterOptions?.[idx]?.filterValue}
+            isSelected={
+              selectedFilterOptions?.[idx]?.filterName === filterOption?.title
+            }
             onFilterValueClick={(title, value) =>
               handleFilterOptionClick(title, value, idx)
             }

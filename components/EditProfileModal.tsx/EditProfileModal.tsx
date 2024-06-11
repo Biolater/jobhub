@@ -5,8 +5,8 @@ import ModalItem from "./ModalItem";
 import { motion } from "framer-motion";
 import { UserDetailsType } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
-import { generateClient } from 'aws-amplify/data';
-import { type Schema } from '@/amplify/data/resource';
+import { generateClient } from "aws-amplify/data";
+import { Schema } from "@/amplify/data/resource";
 import { UserDetailsKeys } from "@/app/home-page/my-profile/page";
 const EditProfileModal: FC<{
   handleClose: () => void;
@@ -15,7 +15,14 @@ const EditProfileModal: FC<{
   onInputChange: (key: string, value: string) => void;
   changes: Partial<Record<UserDetailsKeys, string>>;
   userId: string;
-}> = ({ handleClose, userDetails, inputChanged, onInputChange, changes, userId }) => {
+}> = ({
+  handleClose,
+  userDetails,
+  inputChanged,
+  onInputChange,
+  changes,
+  userId,
+}) => {
   const client = generateClient<Schema>();
   const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
@@ -60,23 +67,26 @@ const EditProfileModal: FC<{
       handleClose();
     }
   };
-  const updateUser = async (id: string,) => {
-    try{
+  const updateUser = async (id: string) => {
+    try {
       setLoading(true);
-      const { data, errors } = await client.models.User.update({
-        id,
-        ...changes
-      }, {
-        authMode: "userPool"
-      })
-      if(errors){
+      const { data, errors } = await client.models.User.update(
+        {
+          id,
+          ...changes,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+      if (errors) {
         setLoading(false);
         throw new Error(errors[0].message);
-      }else if(data){
+      } else if (data) {
         window.location.reload();
       }
       setLoading(false);
-    }catch(err: unknown){
+    } catch (err) {
       if (err instanceof Error) {
         if (err.message.includes("portfolioUrl")) {
           toast.error("Please enter a valid portfolio url");
@@ -87,16 +97,15 @@ const EditProfileModal: FC<{
         toast.error("An unknown error occurred");
       }
     }
-  }
+  };
   const handleSaveChanges = () => {
     if (!inputChanged) {
       toast.error("No changes were made");
       return;
-    } else if(inputChanged && loading){
+    } else if (inputChanged && loading) {
       toast.error("Please wait while we update your profile");
       return;
-    }
-    else {
+    } else {
       updateUser(userId);
     }
   };
@@ -139,7 +148,7 @@ const EditProfileModal: FC<{
               onClick={handleClose}
               className="close__btn focus:ring-2 p-1 focus:ring-offset-2 rounded-sm  "
             >
-              <CloseIcon className="close__icon transition-colors duration-200 fill-whitish hover:fill-white" />
+              <CloseIcon className="close__icon transition-colors duration-200 hover:fill-white fill-whitish size-[14px]" />
             </button>
           </div>
           <div className="header__bottom mt-1">
@@ -166,7 +175,7 @@ const EditProfileModal: FC<{
             onClick={handleSaveChanges}
             className="btn btn-primary flex items-center font-medium transition-colors hover:bg-whitish/80 py-2 px-4 rounded-md bg-whitish text-sm text-primary"
           >
-              {loading && <LoadingButtonIcon />}
+            {loading && <LoadingButtonIcon />}
             Save changes
           </button>
         </footer>
