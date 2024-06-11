@@ -19,6 +19,7 @@ const JobBoard = () => {
   const [activeJobFilterTitle, setActiveJobFilterTitle] = useState("");
   const [datePosted, setDatePosted] = useState("all");
   const [numPage, setNumPage] = useState(1);
+  const [filtersChanged, setFiltersChanged] = useState(false);
   const [onlyRemote, setOnlyRemote] = useState("false");
   const [activelyHiring, setActivelyHiring] = useState("false");
   const [selectedFilterOptions, setSelectedFilterOptions] = useState<
@@ -49,6 +50,7 @@ const JobBoard = () => {
     value: string,
     idx: number
   ) => {
+    setFiltersChanged(true);
     const clickedOption = filterOptions[idx];
     const clickedValueIndex = clickedOption.values.indexOf(value);
     const realValue = clickedOption.realValues[clickedValueIndex];
@@ -457,8 +459,8 @@ const JobBoard = () => {
     if (numPage !== 1) fetchJobs();
   }, [numPage]);
   useEffect(() => {
-      fetchJobs();
-  }, [datePosted, onlyRemote, activelyHiring])
+    if (filtersChanged) fetchJobs();
+  }, [datePosted, onlyRemote, activelyHiring]);
   return (
     <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
       <h1 className="text-center mb-4 text-2xl font-semibold text-whitish">
