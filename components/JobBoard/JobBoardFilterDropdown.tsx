@@ -59,6 +59,7 @@ const JobBoardFilterDropdown: FC<{
 
   return isSelected ? (
     <button
+      title={title}
       onClick={onFilterRemove}
       className="filter-option__selected flex items-center gap-2 text-primary bg-whitish/80 rounded-lg p-2 text-sm font-medium"
     >

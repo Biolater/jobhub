@@ -16,6 +16,7 @@ const JobBoard = () => {
   const [jobResults, setJobResults] = useState<JobBoardItemTypes[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchbarValue, setSearchbarValue] = useState("");
+  const [searchbarValueCopy, setSearchbarValueCopy] = useState("");
   const [activeJobFilterTitle, setActiveJobFilterTitle] = useState("");
   const [datePosted, setDatePosted] = useState("all");
   const [numPage, setNumPage] = useState(1);
@@ -28,7 +29,9 @@ const JobBoard = () => {
     SelectedFilterOption[]
   >([]);
   const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
-  const encodedSearchText = encodeURIComponent(searchbarValue);
+  const encodedSearchText = encodeURIComponent(
+    initialJobSearch ? searchbarValueCopy : searchbarValue
+  );
   const filterOptions = [
     {
       title: "Date posted",
@@ -47,6 +50,12 @@ const JobBoard = () => {
     },
   ];
 
+  const showFilters =
+    searchbarValueCopy &&
+    initialJobSearch &&
+    !loading &&
+    !noJobsFound &&
+    jobResults.length > 0;
   const handleFilterOptionClick = (
     title: string,
     value: string,
@@ -157,11 +166,14 @@ const JobBoard = () => {
       </h1>
       <JobBoardSearchBar
         loading={loading}
-        onSearch={fetchJobs}
+        onSearch={() => {
+          fetchJobs();
+          setSearchbarValueCopy(searchbarValue);
+        }}
         searchBarValue={searchbarValue}
         onSearchbarChange={(value: string) => setSearchbarValue(value)}
       />
-      {searchbarValue && initialJobSearch && (
+      {showFilters && (
         <div className="filter-options flex flex-wrap items-center gap-2 mb-4">
           {filterOptions.map((filterOption, idx) => (
             <JobBoardFilterDropdown

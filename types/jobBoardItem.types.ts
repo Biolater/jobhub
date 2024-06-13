@@ -15,7 +15,7 @@ export type JobBoardItemTypes = {
   job_description: string;
   job_is_remote: boolean;
   job_posted_at_timestamp: number;
-  job_posted_at_datetime_utc: string; // Use Date type for actual usage
+  job_posted_at_datetime_utc: string;
   job_city: string;
   job_state: string;
   job_country: string;
@@ -23,7 +23,7 @@ export type JobBoardItemTypes = {
   job_longitude: number;
   job_benefits: string | null;
   job_google_link: string;
-  job_offer_expiration_datetime_utc: string; // Use Date type for actual usage
+  job_offer_expiration_datetime_utc: string;
   job_offer_expiration_timestamp: number;
   job_required_experience: RequiredExperience;
   job_required_skills: string[] | null;
