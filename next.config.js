@@ -8,7 +8,13 @@ const nextConfig = {
                 port: '',
                 pathname: '/jpg/**',
             },
-            { protocol: 'https', hostname: '*' }
+            { protocol: 'https', hostname: '*' },
+            {
+                protocol: 'http',
+                hostname: 'filecache.mediaroom.com',
+                port: '',
+                pathname: '/**',
+            }
         ],
     },
 }
