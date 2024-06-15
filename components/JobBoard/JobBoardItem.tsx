@@ -17,7 +17,7 @@ const JobBoardItem: FC<{
       <div className="jobBoardItem cursor-pointer rounded-lg p-2 bg-whitish flex gap-2">
         <div className="jobBoardItem__image size-[56px]">
           <img
-            className="max-w-none h-full"
+            className="max-w-none h-full object-contain"
             width={56}
             height={56}
             alt="company logo"
