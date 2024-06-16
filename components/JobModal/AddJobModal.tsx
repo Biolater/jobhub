@@ -35,7 +35,7 @@ const AddJobModal: FC<{ isActive: boolean; handleCancel: () => void }> = ({
         isActive
           ? "opacity-100 pointer-events-auto z-[9999]"
           : "opacity-0 pointer-events-none"
-      } top-0 text-whitish h-screen w-full flex items-center justify-center bg-black/50`}
+      } top-0 text-whitish h-svh w-full flex items-center justify-center bg-black/50`}
     >
       <div
         ref={jobModalRef}

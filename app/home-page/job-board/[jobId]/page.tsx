@@ -1,5 +1,6 @@
 "use client";
 import { FC, useState, useEffect } from "react";
+import useTextTrimmer from "@/hooks/useTextTrimmer";
 import { LoadingSpinner } from "@/components/index";
 import Image from "next/image";
 import { LinkIconCompany } from "@/components/Icons/index";
@@ -15,6 +16,13 @@ type JobResponse = {
 const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   const [jobLoading, setJobLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<JobBoardItemTypes>();
+  const {
+    trimmedText,
+    showTrimmedText,
+    text,
+    setShowTrimmedText,
+    setText,
+  } = useTextTrimmer();
   const companyLocation =
     jobDetails?.job_country && jobDetails?.job_state && jobDetails?.job_city
       ? `${jobDetails?.job_country}, ${jobDetails?.job_state}, ${jobDetails?.job_city}`
@@ -46,14 +54,19 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
     try {
       const response = await fetch(url, options);
       const data: JobResponse = await response.json();
-      if (data.data.length > 0) {
-        setJobDetails(data.data[0]);
-      } else {
-        throw new Error("Job not found");
+      if (data?.data?.length > 0) {
+        setText(data?.data?.[0]?.job_description || "");
+        setJobDetails(data?.data?.[0]);
       }
-      console.log(data);
+      //@ts-ignore
+      else if (data?.message) {
+        //@ts-ignore
+        throw new Error(data?.message);
+      }
     } catch (err) {
-      setError("Job not found");
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setJobLoading(false);
     }
@@ -64,15 +77,16 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   useEffect(() => {
     fetchJobDetails();
   }, []);
-
   return jobLoading ? (
     <div className="fixed top-0 h-svh w-full flex items-center justify-center">
       <LoadingSpinner />
     </div>
   ) : error ? (
-    <h1 className="text-center text-whitish font-semibold text-xl">{error}</h1>
+    <h1 className="text-center px-4 text-whitish font-semibold text-xl">
+      {error}
+    </h1>
   ) : (
-    <div className="job-details px-4 flex flex-col justify-center items-center text-whitish">
+    <div className="job-details p-4 flex flex-col justify-center items-center text-whitish">
       <div className="job-details__logo mb-3">
         <Image
           className=""
@@ -116,11 +130,21 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
       <div className="job-more-details w-full mt-4">
         <p className="text-whitish font-semibold text-[20px]">About the job</p>
         {jobDetails?.job_description && (
-          <p className="text-whitish mt-2 text-sm">
-            {jobDetails?.job_description}
+          <p className="text-whitish whitespace-pre-line mt-2 text-sm">
+            {showTrimmedText ? trimmedText : text}
           </p>
         )}
       </div>
+      {showTrimmedText && (
+        <button className="mt-4" onClick={() => setShowTrimmedText(false)}>
+          See more
+        </button>
+      )}
+      {!showTrimmedText && (
+        <button className="mt-4" onClick={() => setShowTrimmedText(true)}>
+          See less
+        </button>
+      )}
     </div>
   );
 };
