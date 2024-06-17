@@ -5,6 +5,7 @@ import { LoadingSpinner } from "@/components/index";
 import Image from "next/image";
 import { LinkIconCompany } from "@/components/Icons/index";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
+import { motion } from "framer-motion";
 type JobResponse = {
   data: [JobBoardItemTypes?];
   parameters: {
@@ -12,6 +13,14 @@ type JobResponse = {
   };
   request_id: string;
   status: string;
+};
+const BUTTON_VARIANTS = {
+  whileHover: {
+    scale: 1.1,
+  },
+  whileTap: {
+    scale: 0.95,
+  },
 };
 const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   const [jobLoading, setJobLoading] = useState(true);
@@ -97,11 +106,11 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
           src={companyLogo}
         />
       </div>
-      <div className="job-details__body">
-        <h3 className="job-details__title mb-1 text-center text-xl font-semibold">
+      <div className="job-details__body flex flex-col justify-center items-center gap-1">
+        <h3 className="job-details__title text-center text-xl font-semibold">
           {jobDetails?.job_title || "Job title"}
         </h3>
-        <div className="job-sub-details flex flex-col items-center gap-1 justify-center">
+        <div className="job-sub-details flex flex-col items-center justify-center">
           <a
             target="_blank"
             href={jobDetails?.employer_website || ""}
@@ -126,6 +135,15 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
             </p>
           )}
         </div>
+        <button className="apply-button flex items-center justify-center">
+          <a
+            target="_blank"
+            className="p-2 bg-secondary rounded-lg"
+            href={jobDetails?.job_apply_link || ""}
+          >
+            Apply now
+          </a>
+        </button>
       </div>
       <div className="job-more-details w-full mt-4">
         <p className="text-whitish font-semibold text-[20px]">About the job</p>
@@ -136,14 +154,26 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
         )}
       </div>
       {showTrimmedText && (
-        <button className="mt-4" onClick={() => setShowTrimmedText(false)}>
+        <motion.button
+          variants={BUTTON_VARIANTS}
+          whileHover="whileHover"
+          whileTap="whileTap"
+          className="mt-4 p-2 rounded-lg fixed bottom-5 text-sm sm:text-base font-semibold  bg-primary/20 backdrop-blur-lg border border-secondary/80"
+          onClick={() => setShowTrimmedText(false)}
+        >
           See more
-        </button>
+        </motion.button>
       )}
       {!showTrimmedText && (
-        <button className="mt-4" onClick={() => setShowTrimmedText(true)}>
+        <motion.button
+          variants={BUTTON_VARIANTS}
+          whileHover="whileHover"
+          whileTap="whileTap"
+          className="mt-4 p-2 rounded-lg fixed bottom-5 text-sm sm:text-base font-semibold bg-primary/20 backdrop-blur-lg border border-secondary/80"
+          onClick={() => setShowTrimmedText(true)}
+        >
           See less
-        </button>
+        </motion.button>
       )}
     </div>
   );

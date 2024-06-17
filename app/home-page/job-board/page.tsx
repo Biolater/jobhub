@@ -29,9 +29,7 @@ const JobBoard = () => {
     SelectedFilterOption[]
   >([]);
   const baseUrl = "https://jsearch.p.rapidapi.com/search?query=";
-  const encodedSearchText = encodeURIComponent(
-    initialJobSearch ? searchbarValueCopy : searchbarValue
-  );
+
   const filterOptions = [
     {
       title: "Date posted",
@@ -53,9 +51,7 @@ const JobBoard = () => {
   const showFilters =
     searchbarValueCopy &&
     initialJobSearch &&
-    !loading &&
-    !noJobsFound &&
-    jobResults.length > 0;
+    !loading
   const handleFilterOptionClick = (
     title: string,
     value: string,
@@ -105,19 +101,13 @@ const JobBoard = () => {
   const handleFilterButtonClose = () => {
     setActiveJobFilterTitle("");
   };
-  // const resetFilters = () => {
-  //   setActiveJobFilterTitle("");
-  //   setFiltersChanged(false);
-  //   setDatePosted("all");
-  //   setOnlyRemote("false");
-  //   setActivelyHiring("false");
-  //   setSelectedFilterOptions([]);
-  // };
+
   const handleLoadMore = () => {
     setNumPage((prevNumPage) => prevNumPage + 1);
   };
-  const fetchJobs = async () => {
-    setInitialJobSearch(true);
+  const fetchJobs = async (searchText: string) => {
+    const encodedSearchText = encodeURIComponent(searchText);
+    if (!initialJobSearch) setInitialJobSearch(true);
     const rapidApiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
     const rapidApiHost = process.env.NEXT_PUBLIC_RAPID_API_HOST;
     const url = `${baseUrl}${encodedSearchText}&num_pages=${numPage}&date_posted=${datePosted}&remote_jobs_only=${onlyRemote}&actively_hiring=${activelyHiring}`;
@@ -154,10 +144,10 @@ const JobBoard = () => {
     }
   };
   useEffect(() => {
-    if (numPage !== 1) fetchJobs();
+    if (numPage !== 1) fetchJobs(searchbarValueCopy);
   }, [numPage]);
   useEffect(() => {
-    if (filtersChanged) fetchJobs();
+    if (filtersChanged) fetchJobs(searchbarValueCopy);
   }, [datePosted, onlyRemote, activelyHiring]);
   return (
     <main className="jobBoard p-4 sm:px-10 md:px-20 lg:px-40 max-w-[1200px] mx-auto">
@@ -167,8 +157,10 @@ const JobBoard = () => {
       <JobBoardSearchBar
         loading={loading}
         onSearch={() => {
-          fetchJobs();
           setSearchbarValueCopy(searchbarValue);
+          setNumPage(1);
+          setJobResults([]);
+          fetchJobs(searchbarValue);
         }}
         searchBarValue={searchbarValue}
         onSearchbarChange={(value: string) => setSearchbarValue(value)}
