@@ -25,7 +25,11 @@ const BUTTON_VARIANTS = {
 const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   const [jobLoading, setJobLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<JobBoardItemTypes>();
-  const rightContentButtons = ["APPLY NOW", "SAVE JOB", "VISIT WEBSITE"];
+  const rightContentButtons = [
+    "APPLY NOW",
+    "SAVE JOB",
+    jobDetails?.employer_website && "VISIT WEBSITE",
+  ];
   const {
     trimmedText,
     showTrimmedText,
@@ -205,22 +209,33 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
             )}
           </div>
         </div>
-        <div className="job-details__right sticky top-6 justify-center p-3 gap-3 bg-zephyr rounded-lg h-fit flex flex-col col-start-10 col-end-13">
+        <div className="job-details__right sticky top-12 justify-center p-3 gap-3 bg-zephyr rounded-lg h-fit flex flex-col col-start-10 col-end-13">
           {rightContentButtons.map((text, idx) =>
             text === "APPLY NOW" ? (
+              <a
+                href={jobDetails?.job_apply_link || ""}
+                className="text-whitish text-center bg-secondary transition-all duration-200 hover:bg-secondary/80 font-semibold p-3 rounded-lg"
+                key={idx}
+              >
+                {text}
+              </a>
+            ) : text === "SAVE JOB" ? (
               <button
-                className="text-whitish bg-secondary font-semibold p-3 rounded-lg"
+                className="text-whitish bg-primary transition-all duration-200 hover:bg-primary/60 font-semibold p-3 rounded-lg"
                 key={idx}
               >
                 {text}
               </button>
             ) : (
-              <button
-                className="text-whitish bg-primary font-semibold p-3 rounded-lg"
-                key={idx}
-              >
-                {text}
-              </button>
+              text && (
+                <a
+                  href={jobDetails?.employer_website || ""}
+                  className="text-whitish text-center bg-primary transition-all duration-200 hover:bg-primary/60 font-semibold p-3 rounded-lg"
+                  key={idx}
+                >
+                  {text}
+                </a>
+              )
             )
           )}
         </div>
