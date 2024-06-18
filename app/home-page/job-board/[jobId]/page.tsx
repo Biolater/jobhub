@@ -25,6 +25,7 @@ const BUTTON_VARIANTS = {
 const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   const [jobLoading, setJobLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<JobBoardItemTypes>();
+  const rightContentButtons = ["APPLY NOW", "SAVE JOB", "VISIT WEBSITE"];
   const {
     trimmedText,
     showTrimmedText,
@@ -179,7 +180,7 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
           </motion.button>
         )}
       </div>
-      <div className="job-details-desktop hidden p-4  lg:grid grid-cols-12 text-whitish">
+      <div className="job-details-desktop h-[calc(100vh-64px)] overflow-y-auto relative  px-[50px] max-w-[1200px] mx-auto hidden py-4  lg:grid grid-cols-12 text-whitish">
         <div className="job-details__left col-span-8 rounded-lg bg-whitish text-primary p-4">
           <div className="job-details__top">
             <h2 className="job-details__title font-semibold text-2xl">
@@ -204,7 +205,25 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
             )}
           </div>
         </div>
-        <div className="job-details__right"></div>
+        <div className="job-details__right sticky top-6 justify-center p-3 gap-3 bg-zephyr rounded-lg h-fit flex flex-col col-start-10 col-end-13">
+          {rightContentButtons.map((text, idx) =>
+            text === "APPLY NOW" ? (
+              <button
+                className="text-whitish bg-secondary font-semibold p-3 rounded-lg"
+                key={idx}
+              >
+                {text}
+              </button>
+            ) : (
+              <button
+                className="text-whitish bg-primary font-semibold p-3 rounded-lg"
+                key={idx}
+              >
+                {text}
+              </button>
+            )
+          )}
+        </div>
       </div>
     </>
   );

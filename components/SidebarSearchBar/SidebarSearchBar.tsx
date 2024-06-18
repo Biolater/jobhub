@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { SearchIcon } from "../Icons";
 import { FC, useEffect, useRef } from "react";
@@ -21,7 +21,8 @@ const SEARCHBAR_VARIANTS = {
   },
   exit: {
     opacity: 0,
-    y: -30,
+    top: "-30px",
+    width: 0,
     border: "1px solid transparent",
   },
 };
@@ -63,10 +64,10 @@ const SidebarSearchBar: FC<{
           onOutsideClick();
         }
       }
-    }
-    document.addEventListener('keydown', handleEsc);
-    return () => document.removeEventListener('keydown', handleEsc);
-  }, [])
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, []);
   return (
     <motion.div
       ref={searchbarRef}
