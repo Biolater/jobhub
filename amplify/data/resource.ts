@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -18,8 +18,12 @@ const schema = a.schema({
       portfolioUrl: a.url(),
       location: a.string(),
       jobs: a.hasMany("Job", "userId"),
+      savedJobs: a.hasMany("SavedJob", "userId"),
     })
-    .authorization((allow) => [allow.publicApiKey().to(['create']),allow.authenticated()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(["create"]),
+      allow.authenticated(),
+    ]),
   Job: a
     .model({
       userId: a.id(),
@@ -33,6 +37,13 @@ const schema = a.schema({
       user: a.belongsTo("User", "userId"),
     })
     .authorization((allow) => [allow.authenticated()]),
+  SavedJob: a
+    .model({
+      userId: a.id(),
+      jobId: a.id().required(),
+    })
+    .authorization((allow) => [allow.authenticated()])
+    .identifier(["jobId"]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

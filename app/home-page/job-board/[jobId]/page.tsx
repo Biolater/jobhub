@@ -6,6 +6,9 @@ import Image from "next/image";
 import { LinkIconCompany } from "@/components/Icons/index";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { generateClient } from "aws-amplify/api";
+import { Schema } from "@/amplify/data/resource";
 type JobResponse = {
   data: [JobBoardItemTypes?];
   parameters: {
@@ -23,6 +26,8 @@ const BUTTON_VARIANTS = {
   },
 };
 const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
+  const { userId } = useAuth();
+  const client = generateClient<Schema>();
   const [jobLoading, setJobLoading] = useState(true);
   const [jobDetails, setJobDetails] = useState<JobBoardItemTypes>();
   const rightContentButtons = [
@@ -85,12 +90,69 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
       setJobLoading(false);
     }
   };
+  const fetchUserData = async () => {
+    const { data: userData } = await client.models.User.get(
+      {
+        id: userId,
+      },
+      {
+        authMode: "userPool",
+      }
+    );
+    console.log(userData);
+    const userJobs = (await userData?.jobs())?.data || [];
+    console.log(userJobs);
+  };
+  const handleSaveJob = async () => {
+    try {
+      const { data: savedJob, errors } = await client.models.SavedJob.create(
+        {
+          userId,
+          jobId: params.jobId,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+      if (errors) {
+        throw new Error(errors[0].message);
+      } else if (savedJob) {
+        console.log(savedJob);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleRemoveSavedJob = async () => {
+    try {
+      const {
+        data: removedSavedJob,
+        errors,
+      } = await client.models.SavedJob.delete(
+        {
+          jobId: params.jobId,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+
+      if (errors) {
+        throw new Error(errors[0].message);
+      } else if (removedSavedJob) {
+        console.log(removedSavedJob);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const companyLogo =
     jobDetails?.employer_logo ||
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKVFUS0E_FUcfm8FcqIjCEPHAUu2_rqm7Qtg&s";
   useEffect(() => {
-    fetchJobDetails();
-  }, []);
+    if (!jobDetails) fetchJobDetails();
+    fetchUserData();
+  }, [userId]);
   return jobLoading ? (
     <div className="fixed top-0 h-svh w-full flex items-center justify-center">
       <LoadingSpinner />
@@ -184,7 +246,7 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
           </motion.button>
         )}
       </div>
-      <div className="job-details-desktop h-[calc(100vh-64px)] overflow-y-auto relative  px-[50px] max-w-[1200px] mx-auto hidden py-4  lg:grid grid-cols-12 text-whitish">
+      <div className="job-details-desktop place-content-start h-[calc(100vh-64px)] overflow-y-auto relative  px-[50px] max-w-[1200px] mx-auto hidden py-4  lg:grid grid-cols-12 text-whitish">
         <div className="job-details__left col-span-8 rounded-lg bg-whitish text-primary p-4">
           <div className="job-details__top">
             <h2 className="job-details__title font-semibold text-2xl">
