@@ -32,14 +32,15 @@ const schema = a.schema({
       company: a.string().required(),
       status: a.enum(["Saved", "Applied", "Interviewing", "Hired", "Rejected"]),
       description: a.string().required(),
-      date: a.date().required(),
-      notes: a.string(),
+      date: a.string().required(),
+      notes: a.string(),  
       user: a.belongsTo("User", "userId"),
     })
     .authorization((allow) => [allow.authenticated()]),
   SavedJob: a
     .model({
       userId: a.id(),
+      user: a.belongsTo("User", "userId"),
       jobId: a.id().required(),
     })
     .authorization((allow) => [allow.authenticated()])

@@ -100,7 +100,6 @@ export default function Home() {
   useEffect(() => {
     const subscription = client.models.Job.observeQuery({authMode: "userPool"}).subscribe({
       next: ({ items }) => {
-        // Update the state with the latest user jobs
         if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
           const jobStatuses = latestUserJobs?.map((job) => job.status);

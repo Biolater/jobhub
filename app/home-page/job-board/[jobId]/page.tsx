@@ -3,12 +3,13 @@ import { FC, useState, useEffect } from "react";
 import useTextTrimmer from "@/hooks/useTextTrimmer";
 import { LoadingSpinner } from "@/components/index";
 import Image from "next/image";
-import { LinkIconCompany } from "@/components/Icons/index";
+import { LinkIconCompany, LoadingButtonIcon } from "@/components/Icons/index";
 import { JobBoardItemTypes } from "@/types/jobBoardItem.types";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { generateClient } from "aws-amplify/api";
 import { Schema } from "@/amplify/data/resource";
+import toast from "react-hot-toast";
 type JobResponse = {
   data: [JobBoardItemTypes?];
   parameters: {
@@ -29,6 +30,9 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
   const { userId } = useAuth();
   const client = generateClient<Schema>();
   const [jobLoading, setJobLoading] = useState(true);
+  const [saveJobLoading, setSaveJobLoading] = useState(false);
+  const [removeJobLoading, setRemoveJobLoading] = useState(false);
+  const [jobIsSaved, setJobIsSaved] = useState(false);
   const [jobDetails, setJobDetails] = useState<JobBoardItemTypes>();
   const rightContentButtons = [
     "APPLY NOW",
@@ -90,7 +94,7 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
       setJobLoading(false);
     }
   };
-  const fetchUserData = async () => {
+  const fetchUserSavedJobs = async () => {
     const { data: userData } = await client.models.User.get(
       {
         id: userId,
@@ -99,51 +103,86 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
         authMode: "userPool",
       }
     );
-    console.log(userData);
-    const userJobs = (await userData?.jobs())?.data || [];
-    console.log(userJobs);
+    const userSavedJobs = (await userData?.savedJobs())?.data || [];
+    if (userSavedJobs?.length > 0) {
+      const isJobSaved = userSavedJobs.some(
+        (savedJob) => savedJob?.jobId === params.jobId
+      );
+      setJobIsSaved(isJobSaved);
+    } else {
+      setJobIsSaved(false);
+    }
   };
   const handleSaveJob = async () => {
-    try {
-      const { data: savedJob, errors } = await client.models.SavedJob.create(
-        {
-          userId,
-          jobId: params.jobId,
-        },
-        {
-          authMode: "userPool",
+    if (!saveJobLoading) {
+      try {
+        setSaveJobLoading(true);
+        const { data: savedJob, errors } = await client.models.SavedJob.create(
+          {
+            userId,
+            jobId: params.jobId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
+        const {
+          data: newJob,
+          errors: newJobErrrors,
+        } = await client.models.Job.create(
+          {
+            title: jobDetails?.job_title || "",
+            description: jobDetails?.job_description || "",
+            company: jobDetails?.employer_name || "",
+            date: new Date().toISOString(),
+            joburl: jobDetails?.job_apply_link || "",
+            userId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
+        if (errors || newJobErrrors) {
+          setJobIsSaved(false);
+          setSaveJobLoading(false);
+          toast.error(errors?.[0]?.message ?? "An unknown error occurred");
+          throw new Error(errors?.[0].message || newJobErrrors?.[0].message);
+        } else if (savedJob && newJob) {
+          toast.success("Job saved successfully");
         }
-      );
-      if (errors) {
-        throw new Error(errors[0].message);
-      } else if (savedJob) {
-        console.log(savedJob);
+        setSaveJobLoading(false);
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
   const handleRemoveSavedJob = async () => {
-    try {
-      const {
-        data: removedSavedJob,
-        errors,
-      } = await client.models.SavedJob.delete(
-        {
-          jobId: params.jobId,
-        },
-        {
-          authMode: "userPool",
-        }
-      );
+    if (!saveJobLoading) {
+      try {
+        setRemoveJobLoading(true);
+        const {
+          data: removedSavedJob,
+          errors,
+        } = await client.models.SavedJob.delete(
+          {
+            jobId: params.jobId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
 
-      if (errors) {
-        throw new Error(errors[0].message);
-      } else if (removedSavedJob) {
-        console.log(removedSavedJob);
+        if (errors) {
+          setSaveJobLoading(false);
+          toast.error(errors[0].message);
+          throw new Error(errors[0].message);
+        } else if (removedSavedJob) {
+          toast.success("Job removed successfully");
+        }
+        setRemoveJobLoading(false);
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
   const companyLogo =
@@ -151,7 +190,26 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKVFUS0E_FUcfm8FcqIjCEPHAUu2_rqm7Qtg&s";
   useEffect(() => {
     if (!jobDetails) fetchJobDetails();
-    fetchUserData();
+    fetchUserSavedJobs();
+  }, [userId]);
+  useEffect(() => {
+    const sub = client.models.SavedJob.observeQuery({
+      authMode: "userPool",
+    }).subscribe({
+      next: ({ items }) => {
+        if (items) {
+          const isJobSaved = items.find(
+            (item) => item.userId === userId && item.jobId === params.jobId
+          );
+          if (isJobSaved) {
+            setJobIsSaved(true);
+          } else {
+            setJobIsSaved(false);
+          }
+        }
+      },
+    });
+    return () => sub.unsubscribe();
   }, [userId]);
   return jobLoading ? (
     <div className="fixed top-0 h-svh w-full flex items-center justify-center">
@@ -282,12 +340,33 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
                 {text}
               </a>
             ) : text === "SAVE JOB" ? (
-              <button
-                className="text-whitish bg-primary transition-all duration-200 hover:bg-primary/60 font-semibold p-3 rounded-lg"
-                key={idx}
-              >
-                {text}
-              </button>
+              jobIsSaved ? (
+                <button
+                  onClick={handleRemoveSavedJob}
+                  className={`text-whitish flex items-center justify-center gap-1 ${
+                    removeJobLoading
+                      ? "bg-primary/60 text-opacity-60 pointer-events-none"
+                      : "bg-primary pointer-events-auto hover:bg-primary/60"
+                  } transition-all duration-200  font-semibold p-3 rounded-lg`}
+                  key={idx}
+                >
+                  {removeJobLoading ? "REMOVING JOB" : "REMOVE SAVED JOB"}
+                  {removeJobLoading && <LoadingButtonIcon />}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSaveJob}
+                  className={`text-whitish flex items-center justify-center gap-1 ${
+                    saveJobLoading
+                      ? "bg-primary/60 text-opacity-60 pointer-events-none"
+                      : "bg-primary pointer-events-auto hover:bg-primary/60"
+                  } transition-all duration-200  font-semibold p-3 rounded-lg`}
+                  key={idx}
+                >
+                  {saveJobLoading ? "SAVING JOB" : text}
+                  {saveJobLoading && <LoadingButtonIcon />}
+                </button>
+              )
             ) : (
               text && (
                 <a
