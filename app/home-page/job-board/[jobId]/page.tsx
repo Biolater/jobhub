@@ -287,15 +287,43 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
               </p>
             )}
           </div>
-          <button className="apply-button flex items-center justify-center">
-            <a
-              target="_blank"
-              className="p-2 bg-secondary rounded-lg"
-              href={jobDetails?.job_apply_link || ""}
-            >
-              Apply now
-            </a>
-          </button>
+
+          <div className="job__actions justify-center flex items-center gap-2 flex-wrap">
+            <button className="apply-button flex items-center justify-center">
+              <a
+                target="_blank"
+                className="p-2 bg-secondary rounded-lg"
+                href={jobDetails?.job_apply_link || ""}
+              >
+                Apply now
+              </a>
+            </button>
+            {jobIsSaved ? (
+              <button
+                onClick={handleRemoveSavedJob}
+                className={`text-whitish flex items-center justify-center gap-1 ${
+                  removeJobLoading
+                    ? "bg-zephyr/60 text-opacity-60 pointer-events-none"
+                    : "bg-zephyr pointer-events-auto hover:bg-zephyr/60"
+                } transition-all duration-200 p-2 rounded-lg`}
+              >
+                {removeJobLoading ? "Removing job" : "Remove saved job"}
+                {removeJobLoading && <LoadingButtonIcon />}
+              </button>
+            ) : (
+              <button
+                onClick={handleSaveJob}
+                className={`text-whitish flex items-center justify-center gap-1 ${
+                  saveJobLoading
+                    ? "bg-zephyr/60 text-opacity-60 pointer-events-none"
+                    : "bg-zephyr pointer-events-auto hover:bg-zephyr/60"
+                } transition-all duration-200 p-2 rounded-lg`}
+              >
+                {saveJobLoading ? "Saving job" : "Save job"}
+                {saveJobLoading && <LoadingButtonIcon />}
+              </button>
+            )}
+          </div>
         </div>
         <div className="job-more-details w-full mt-4">
           <p className="text-whitish font-semibold text-[20px]">
