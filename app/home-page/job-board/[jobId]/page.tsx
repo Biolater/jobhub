@@ -128,25 +128,27 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
         );
         const {
           data: newJob,
-          errors: newJobErrrors,
+          errors: newJobErrors,
         } = await client.models.Job.create(
           {
             title: jobDetails?.job_title || "",
             description: jobDetails?.job_description || "",
             company: jobDetails?.employer_name || "",
+            status: "Saved",
             date: new Date().toISOString(),
             joburl: jobDetails?.job_apply_link || "",
             userId,
+            jobId: params.jobId,
           },
           {
             authMode: "userPool",
           }
         );
-        if (errors || newJobErrrors) {
+        if (errors || newJobErrors) {
           setJobIsSaved(false);
           setSaveJobLoading(false);
           toast.error(errors?.[0]?.message ?? "An unknown error occurred");
-          throw new Error(errors?.[0].message || newJobErrrors?.[0].message);
+          throw new Error(errors?.[0].message || newJobErrors?.[0].message);
         } else if (savedJob && newJob) {
           toast.success("Job saved successfully");
         }
@@ -160,6 +162,7 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
     if (!saveJobLoading) {
       try {
         setRemoveJobLoading(true);
+
         const {
           data: removedSavedJob,
           errors,
@@ -171,6 +174,29 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
             authMode: "userPool",
           }
         );
+
+        const {
+          data: savedJob,
+          errors: savedJobErrors,
+        } = await client.models.Job.listJobByJobId(
+          {
+            jobId: params.jobId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
+
+        if (!savedJobErrors && savedJob) {
+          await client.models.Job.delete(
+            {
+              id: savedJob[0].id,
+            },
+            {
+              authMode: "userPool",
+            }
+          );
+        }
 
         if (errors) {
           setSaveJobLoading(false);

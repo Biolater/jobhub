@@ -1,7 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { generateClient } from "aws-amplify/data";
-import { type Schema } from "../../amplify/data/resource";
+import { Schema } from "../../amplify/data/resource";
 import outputs from "../../amplify_outputs.json";
 import { Amplify } from "aws-amplify";
 import { useAuth } from "@/contexts/AuthContext";
@@ -61,6 +61,7 @@ const AddJobForm: FC<{ handleCancel: () => void }> = ({ handleCancel }) => {
           status: formData.status,
           date: formData.date,
           notes: formData.note,
+          jobId: crypto.randomUUID(),
         },
         {
           authMode: "userPool",
