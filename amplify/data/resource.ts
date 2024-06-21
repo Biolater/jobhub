@@ -30,6 +30,7 @@ const schema = a.schema({
       notes: a.string(),
       jobId: a.string().required(),
       user: a.belongsTo("User", "userId"),
+      isSaved: a.boolean().default(false),
     }).secondaryIndexes((index) => [index('jobId')])
     .authorization((allow) => [allow.authenticated()]),
   SavedJob: a

@@ -18,7 +18,8 @@ import { CloseIcon } from "../Icons";
 import { useJobDetail } from "@/contexts/ActiveJobDetailsContext";
 import toast from "react-hot-toast";
 import { generateClient } from "aws-amplify/data";
-import { type Schema } from "@/amplify/data/resource";
+import { Schema } from "@/amplify/data/resource";
+import JobBoardItem from "../JobBoard/JobBoardItem";
 
 /**
  * Variants for close icon animation
@@ -68,19 +69,49 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
   const handleClose = () => {
     setDeleteJobModalActive(false);
   };
+
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const { data: deletedJob, errors } = await client.models.Job.delete({
-        id: jobId,
-      }, {
-        authMode: 'userPool'
-      });
-      if (errors) {
-        throw new Error(errors[0].message);
-      }
-      if (deletedJob) {
-        toast.success("Job deleted successfully");
+      const { data: jobDetails } = await client.models.Job.get(
+        {
+          id: jobId,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+      if (jobDetails?.isSaved) {
+        const {
+          data: deletedSavedJob,
+          errors,
+        } = await client.models.SavedJob.delete(
+          {
+            jobId: jobDetails?.jobId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
+        if (errors) {
+          throw new Error(errors[0].message);
+        }
+        if (deletedSavedJob) {
+          const { data: deletedJob, errors } = await client.models.Job.delete(
+            {
+              id: jobId,
+            },
+            {
+              authMode: "userPool",
+            }
+          );
+          if (errors) {
+            throw new Error(errors[0].message);
+          }
+          if (deletedJob) {
+            toast.success("Job deleted successfully");
+          }
+        }
       }
     } catch (error) {
       console.log(error);
@@ -124,7 +155,10 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
       exit={{ opacity: 0 }}
       className="deleteJobModal__layer z-[9999] fixed top-0 right-0 bottom-0 left-0 h-screen flex items-center justify-center w-full bg-black/50"
     >
-      <div ref={jobModalInnerRef} className="deleteJobModal__inner sm:w-max sm:rounded-lg w-full bg-primary">
+      <div
+        ref={jobModalInnerRef}
+        className="deleteJobModal__inner sm:w-max sm:rounded-lg w-full bg-primary"
+      >
         <header className="deleteJobModal__header text-whitish border-b border-white/20 flex items-center justify-between p-4">
           <p>Delete Job</p>
           <motion.button

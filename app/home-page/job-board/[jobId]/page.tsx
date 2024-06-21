@@ -139,6 +139,7 @@ const JobDetails: FC<{ params: { jobId: string } }> = ({ params }) => {
             joburl: jobDetails?.job_apply_link || "",
             userId,
             jobId: params.jobId,
+            isSaved: true,
           },
           {
             authMode: "userPool",

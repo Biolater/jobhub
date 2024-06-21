@@ -9,7 +9,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { NoJobIcon } from "@/components/Icons";
 import { generateClient } from "aws-amplify/data";
-import { type Schema } from "@/amplify/data/resource";
+import { Schema } from "@/amplify/data/resource";
 import { useAuth } from "@/contexts/AuthContext";
 import { JobTypes } from "@/types/job.types";
 import { AnimatePresence } from "framer-motion";
@@ -39,7 +39,6 @@ export default function Home() {
     deleteJobId,
   } = useJobDetail();
 
-  // Amplify client setup
   const client = generateClient<Schema>();
   const { userId, setUserJobStatuses } = useAuth();
   const searchbarValue = useSelector(selectSearchbarValue);
@@ -61,11 +60,14 @@ export default function Home() {
     const fetchUserData = async () => {
       try {
         // Fetch user data from the Amplify Data Store
-        const { data: userData, errors } = await client.models.User.get({
-          id: userId,
-        }, {
-          authMode: 'userPool'
-        });
+        const { data: userData, errors } = await client.models.User.get(
+          {
+            id: userId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
         // Error handling
         if (errors) {
           throw new Error(errors[0].message);
@@ -98,7 +100,9 @@ export default function Home() {
     if (userId) fetchUserData();
   }, [userId]);
   useEffect(() => {
-    const subscription = client.models.Job.observeQuery({authMode: "userPool"}).subscribe({
+    const subscription = client.models.Job.observeQuery({
+      authMode: "userPool",
+    }).subscribe({
       next: ({ items }) => {
         if (userId) {
           const latestUserJobs = items.filter((job) => job.userId === userId);
