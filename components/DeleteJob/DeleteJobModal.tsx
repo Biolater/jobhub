@@ -112,6 +112,21 @@ const DeleteJobModal: FC<{ jobId: string }> = ({ jobId }) => {
             toast.success("Job deleted successfully");
           }
         }
+      } else {
+        const { data: deletedJob, errors } = await client.models.Job.delete(
+          {
+            id: jobId,
+          },
+          {
+            authMode: "userPool",
+          }
+        );
+        if (errors) {
+          throw new Error(errors[0].message);
+        }
+        if (deletedJob) {
+          toast.success("Job deleted successfully");
+        }
       }
     } catch (error) {
       console.log(error);

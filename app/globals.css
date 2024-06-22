@@ -175,3 +175,9 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.dashboard canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
