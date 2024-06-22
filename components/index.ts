@@ -17,6 +17,7 @@ import JobBoardItem from "./JobBoard/JobBoardItem";
 import JobBoardItemSkeleton from "./JobBoard/JobBoardItemSkeleton";
 import JobBoardSearchBar from "./JobBoard/JobBoardSearchBar";
 import JobBoardFilterDropdown from "./JobBoard/JobBoardFilterDropdown";
+import BarChart from "./BarChart/BarChart";
 export {
   Navbar,
   AddJobModal,
@@ -37,4 +38,5 @@ export {
   JobBoardItemSkeleton,
   JobBoardSearchBar,
   JobBoardFilterDropdown,
+  BarChart,
 };
