@@ -7,7 +7,7 @@ import { Hub } from "aws-amplify/utils";
 import { useRouter } from "next/navigation";
 import action from "@/app/actions";
 import { generateClient } from "aws-amplify/api";
-import { type Schema } from "@/amplify/data/resource";
+import { Schema } from "@/amplify/data/resource";
 Amplify.configure(outputs);
 
 export type UserDetailsType = {
@@ -32,7 +32,7 @@ const AuthContext = createContext({
   setUserId: (id: string) => {},
   setUserJobStatuses: (jobs: any) => {},
   setUserDetails: (details: UserDetailsType) => {},
-  setUserDetailsLoading : (value: boolean) => {}
+  setUserDetailsLoading: (value: boolean) => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -65,7 +65,7 @@ export default function AuthContextProvider({
             "createdAt",
             "profileBanner",
             "portfolioUrl",
-            "location"
+            "location",
           ],
         }
       );
@@ -81,13 +81,13 @@ export default function AuthContextProvider({
             joinDate: data.createdAt,
             profileBanner: data?.profileBanner || null,
             portfolioUrl: data?.portfolioUrl || "",
-            location: data?.location || ""
+            location: data?.location || "",
           });
         }
       }
     } catch (err) {
       console.log(err);
-    }finally{
+    } finally {
       setUserDetailsLoading(false);
     }
   };
@@ -116,7 +116,7 @@ export default function AuthContextProvider({
           joinDate: "",
           profileBanner: null,
           portfolioUrl: "",
-          location: ""
+          location: "",
         });
         router.push("/");
         break;
@@ -148,8 +148,8 @@ export default function AuthContextProvider({
           joinDate: "",
           profileBanner: null,
           portfolioUrl: "",
-          location: ""
-        })
+          location: "",
+        });
         action(false);
         setUserJobStatuses([]);
       }

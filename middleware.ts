@@ -4,8 +4,13 @@ import { NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const isLoggedIn = request.cookies.get("isLoggedIn");
   console.log(request.nextUrl.pathname);
-  if (isLoggedIn?.value === "false" && request.nextUrl.pathname !== "/") {
-    return NextResponse.rewrite(new URL("/", request.url));
+  if (
+    isLoggedIn?.value === "false" &&
+    request.nextUrl.pathname !== "/sign-up" &&
+      request.nextUrl.pathname !== "/sign-in" &&
+      request.nextUrl.pathname !== "/confirm-password"
+  ) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
   } else if (
     isLoggedIn?.value === "true" &&
     (request.nextUrl.pathname === "/" ||
@@ -13,7 +18,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname === "/sign-in" ||
       request.nextUrl.pathname === "/confirm-password")
   ) {
-    return NextResponse.rewrite(new URL("/home-page", request.url));
+    return NextResponse.redirect(new URL("/home-page", request.url));
   } else {
     return NextResponse.next();
   }
