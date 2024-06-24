@@ -11,6 +11,7 @@ import { createAvatar } from "@dicebear/core";
 import { pixelArt } from "@dicebear/collection";
 import toast from "react-hot-toast";
 import { LoadingButtonIcon } from "@/components/Icons";
+import Link from "next/link";
 
 Amplify.configure(outputs);
 const Signup = () => {
@@ -125,19 +126,27 @@ const Signup = () => {
           className="transition-all duration-300  w-full col-span-3 bg-primary text-whitish border-2 focus-visible:outline-none focus-visible:border-whitish border-zephyr py-2 px-3 rounded-lg"
         />
       </div>
-      <button
-        disabled={loading}
-        type="submit"
-        className="btn btn-primary flex items-center font-medium transition-colors hover:bg-whitish/80 py-2 px-4 rounded-md bg-whitish text-primary"
-      >
-        {!loading && "Sign Up"}
-        {loading && (
-          <>
-            <span className="me-1">Signing Up</span>
-            <LoadingButtonIcon />
-          </>
-        )}
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          disabled={loading}
+          type="submit"
+          className="btn btn-primary flex items-center font-medium transition-colors hover:bg-whitish/80 py-2 px-4 rounded-md bg-whitish text-primary"
+        >
+          {!loading && "Sign up"}
+          {loading && (
+            <>
+              <span className="me-1">Signing Up</span>
+              <LoadingButtonIcon />
+            </>
+          )}
+        </button>
+        <Link
+          className="btn btn-primary flex items-center font-medium transition-colors py-2 px-4 rounded-md text-whitish/40 hover:underline hover:text-whitish"
+          href="/sign-in"
+        >
+          Sign in now
+        </Link>
+      </div>
     </form>
   );
 };
