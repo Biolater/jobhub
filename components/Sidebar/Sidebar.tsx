@@ -9,7 +9,6 @@ import {
   SearchIcon,
   BrowseJobsIcon,
   DashboardIcon,
-  SettingsIcon,
   LogoutIcon,
   ThreeDotsIcon,
   HomeIcon
@@ -42,10 +41,6 @@ const TOP_SIDEBAR_ITEMS = (router: ReturnType<typeof useRouter>) => [
 ];
 
 const BOTTOM_SIDEBAR_ITEMS = [
-  {
-    text: "Settings",
-    icon: <SettingsIcon />,
-  },
   {
     text: "Logout",
     icon: <LogoutIcon />,
@@ -158,7 +153,7 @@ const Sidebar: FC<{
             <Link onClick={onOutsideClick} href="/home-page/my-profile">
               <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
                 <div className="userProfile__left flex items-center gap-2">
-                  <div className="userProfile__pic">
+                  <div className="userProfile__pic size-10">
                     {userDetails?.profilePic && (
                       <Image
                         quality={100}
@@ -174,7 +169,7 @@ const Sidebar: FC<{
                     <p className="userProfile__name text-lg text-whitish font-semibold">
                       {userDetails.username}
                     </p>
-                    <p className="userProfile__email text-sm text-whitish/50">
+                    <p className="userProfile__email text-[12px] text-whitish/50">
                       {userDetails.email}
                     </p>
                   </div>

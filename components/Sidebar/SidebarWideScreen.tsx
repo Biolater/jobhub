@@ -9,7 +9,6 @@ import {
   SearchIcon,
   BrowseJobsIcon,
   DashboardIcon,
-  SettingsIcon,
   LogoutIcon,
   ThreeDotsIcon,
   HomeIcon,
@@ -51,10 +50,6 @@ const TOP_SIDEBAR_ITEMS: {
 ];
 
 const BOTTOM_SIDEBAR_ITEMS = [
-  {
-    text: "Settings",
-    icon: <SettingsIcon />,
-  },
   {
     text: "Logout",
     icon: <LogoutIcon />,
@@ -128,7 +123,7 @@ const SidebarWideScreen: FC<{ onSearchButtonClick: () => void }> = ({
           <Link href="/home-page/my-profile">
             <div className="userProfile sm:items-center sm:justify-center cursor-pointer p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-disabledColor/20 flex items-center justify-between">
               <div className="userProfile__left flex items-center gap-2">
-                <div className="userProfile__pic size-[40px]">
+                <div className="userProfile__pic size-10">
                   {userDetails.profilePic && (
                     <Image
                       quality={100}
